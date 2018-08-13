@@ -1,0 +1,88 @@
+name "motion_planners"
+# Optionally declare the version number
+# version "0.1"
+
+using_library "motion_planners"
+
+import_types_from "motion_planners/Config.hpp"
+
+import_types_from "base"
+
+task_context "PlannerTask" do abstract
+
+    # Configuration needed
+    needs_configuration
+    runtime_states  'GOAL_RECEIVED', 'PLANNING', 'MISSING_TRANSFORMATION', 'PATH_FOUND', 'NO_PATH_FOUND', 'TIMEOUT',
+                    'START_STATE_IN_COLLISION', 'GOAL_STATE_IN_COLLISION', 'COLLISION_LINK_NAME',
+                    'INVALID_START_STATE', 'INVALID_GOAL_STATE',  'UNRECOGNIZED_GOAL_TYPE',
+                    'APPROXIMATE_SOLUTION','CRASH','NO_JOINT_STATUS',
+                    'START_JOINTANGLES_NOT_AVAILABLE', 'GOAL_JOINTANGLES_NOT_AVAILABLE',
+                    'CONSTRAINED_POSE_NOT_WITHIN_BOUNDS', 
+                    'NO_KINEMATIC_SOLVER_FOUND',
+                    'IK_SOLVER_FUNCTION_NOT_FOUND', 'NO_IK', 
+		    'KDL_CHAIN_FAILED', 'KDL_INITIALISATION_FAILED',	
+		    'NO_KINEMATIC_SOLVER_FOUND', 
+		    'NO_IK_SOLUTION', 'NO_FK_SOLUTION', 'IK_TIMEOUT',
+                    'PLANNING_REQUEST_SUCCESS', 'ROBOTMODEL_INITIALISATION_FAILED',
+                    'PLANNER_INITIALISATION_FAILED',
+                    'UNKNOWN_STATE'
+    
+    # Planner Config
+    property("planner_config", "/motion_planners/PlannerConfig")
+
+    # Input port.
+    input_port("joints_status", "/base/samples/Joints").
+        doc("Current joints angles")
+
+    input_port("environment_in", "/base/samples/Pointcloud").
+        doc("Poincloud data representing the environment in the body frame")
+
+   
+    # Output port.
+    output_port("planned_trajectory", "/base/JointsTrajectory").
+        doc("The planned trajectory which should be followed")
+
+    output_port("environment_out", "/base/samples/Pointcloud").
+        doc("Poincloud data representing the environment")
+
+    output_port("collision_information", "/motion_planners/CollisionInformation").
+        doc("Collision objects names")
+
+        
+        
+        
+#   Uncomment the following lines and also in the task side,
+#   if the poincloud is not in the body frame
+#    transformer do
+#        transform "pointcloud", "body"
+#        align_port "environment_in"
+#        max_latency 0.1
+#    end
+
+
+end
+
+task_context "JointSpaceTask" do subclasses "PlannerTask"
+    # Configuration needed
+    needs_configuration    
+
+    # Input port.
+    input_port("target_joints_angle", "/base/commands/Joints").
+        doc("Target joints angles")
+
+    port_driven
+end
+
+
+task_context "CartesianSpaceTask" do subclasses "PlannerTask"
+    # Configuration needed
+    needs_configuration
+
+    # Input port.
+    input_port("target_pose", "/base/samples/RigidBodyState").
+        doc("Target pose")
+
+    port_driven
+end
+                                                                     
+
