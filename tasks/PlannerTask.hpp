@@ -118,6 +118,14 @@ namespace motion_planners{
          * before calling start() again.
          */
         void cleanupHook();
+	
+    private:
+        
+	base::samples::RigidBodyState target_pose_;
+        base::commands::Joints target_joints_angle_;
+	
+        void plan(base::commands::Joints &target_joints_angle);			
+        void plan(base::samples::RigidBodyState &target_pose);	
     };
 }
 

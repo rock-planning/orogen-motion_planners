@@ -18,8 +18,6 @@ PlannerTask::~PlannerTask()
 {
 }
 
-
-
 /// The following lines are template definitions for the various state machine
 // hooks defined by Orocos::RTT. See PlannerTask.hpp for more detailed
 // documentation about them.
@@ -50,17 +48,90 @@ void PlannerTask::updateHook()
 {
     PlannerTaskBase::updateHook();
     
-    // read the current joint angles
-    //if(_joints_status.readNewest(joints_status_) == RTT::NoData)
-    if(_joints_status.read(joints_status_) == RTT::NoData)
-    {
-           //state(NO_JOINT_STATUS);
-	   state(RUNNING);
-           return ;
+    // read the current joint angles        
+    if(_joints_status.readNewest(joints_status_) == RTT::NewData)
+    {	
+	//state(RUNNING);    
     }
     else
+    {
 	state(NO_JOINT_STATUS);
-	//state(RUNNING);
+	return ;
+    }
+    
+    // plan for target joint angles
+    if(_target_joints_angle.read(target_joints_angle_) == RTT::NewData)
+    {
+	planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+        plan(target_joints_angle_);
+    }
+    
+    // plan for target joint angles
+    if(_target_pose.read(target_pose_) == RTT::NewData)
+    {
+	planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+        plan(target_pose_);
+    }
+}
+
+void PlannerTask::plan(base::samples::RigidBodyState &target_pose)
+{
+    state(GOAL_RECEIVED);
+
+    //planned_trajectory.clear();    
+   
+    if(planner_->assignPlanningRequest(joints_status_, target_pose, planner_config_.robot_model.planning_group_name, planner_status_))
+    {
+    
+	if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
+	{
+	    collision_information_.collision_pair_names = planner_->getCollisionObjectNames();
+	    _collision_information.write(collision_information_);
+	}
+	else
+	{
+	    setPlannerStatus(planner_status_);
+	    bool res = planner_->solve(solution_, planner_status_);
+	    std::cout<<"Solve result = "<< res<<std::endl;
+	    if(res)
+	    {std::cout<<"Solution size = "<<solution_.size()<<std::endl;
+		_planned_trajectory.write(solution_);
+		//state(PATH_FOUND);
+	    }
+	    
+	}
+    }
+    std::cout<<"klkl "<<planner_status_.statuscode<<"  "<<planner_status_.kinematic_status.statuscode<<std::endl;
+    setPlannerStatus(planner_status_);
+}
+
+void PlannerTask::plan(base::commands::Joints &target_joints_angle)
+{
+    state(GOAL_RECEIVED);
+
+    //planned_trajectory.clear();
+    
+   
+    planner_->assignPlanningRequest(joints_status_, target_joints_angle, planner_config_.robot_model.planning_group_name, planner_status_);
+    
+    if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
+    {
+	collision_information_.collision_pair_names = planner_->getCollisionObjectNames();
+        _collision_information.write(collision_information_);
+	setPlannerStatus(planner_status_);
+    }
+    else
+    {
+	setPlannerStatus(planner_status_);
+    
+	if(planner_->solve(solution_, planner_status_))
+	{
+	    _planned_trajectory.write(solution_);
+	    //state(PATH_FOUND);
+	}
+	
+	setPlannerStatus(planner_status_);
+    }
 }
 
 
@@ -140,10 +211,6 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
         
     }
 }
-
-
-
-
 
 void PlannerTask::errorHook()
 {

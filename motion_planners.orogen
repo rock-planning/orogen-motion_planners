@@ -8,7 +8,7 @@ import_types_from "motion_planners/Config.hpp"
 
 import_types_from "base"
 
-task_context "PlannerTask" do abstract
+task_context "PlannerTask" do 
 
     # Configuration needed
     needs_configuration
@@ -36,7 +36,12 @@ task_context "PlannerTask" do abstract
 
     input_port("environment_in", "/base/samples/Pointcloud").
         doc("Poincloud data representing the environment in the body frame")
-
+        
+    input_port("target_joints_angle", "/base/commands/Joints").
+        doc("Target joints angles")
+        
+    input_port("target_pose", "/base/samples/RigidBodyState").
+	doc("Target pose")
    
     # Output port.
     output_port("planned_trajectory", "/base/JointsTrajectory").
@@ -46,9 +51,10 @@ task_context "PlannerTask" do abstract
         doc("Poincloud data representing the environment")
 
     output_port("collision_information", "/motion_planners/CollisionInformation").
-        doc("Collision objects names")
+        doc("Collision objects names")      
+            
 
-        
+    port_driven
         
         
 #   Uncomment the following lines and also in the task side,
@@ -62,27 +68,5 @@ task_context "PlannerTask" do abstract
 
 end
 
-task_context "JointSpaceTask" do subclasses "PlannerTask"
-    # Configuration needed
-    needs_configuration    
-
-    # Input port.
-    input_port("target_joints_angle", "/base/commands/Joints").
-        doc("Target joints angles")
-
-    port_driven
-end
-
-
-task_context "CartesianSpaceTask" do subclasses "PlannerTask"
-    # Configuration needed
-    needs_configuration
-
-    # Input port.
-    input_port("target_pose", "/base/samples/RigidBodyState").
-        doc("Target pose")
-
-    port_driven
-end
                                                                      
 

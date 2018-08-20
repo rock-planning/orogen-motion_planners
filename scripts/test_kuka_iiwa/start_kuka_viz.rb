@@ -9,31 +9,25 @@ robot_viz = Vizkit.default_loader.RobotVisualization
 robot_viz.modelFile = './data/kuka_iiwa.urdf'
 
  
-Orocos.run  'motion_planners::JointSpaceTask'=>'manipulatorplanner_js',
-            'motion_planners::CartesianSpaceTask'=>'manipulatorplanner_cs',
+Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
             'trajectory_generation::TestPlant' =>'plant', :output => nil do
 
 
-    kuka_planner_js	= Orocos.name_service.get "manipulatorplanner_js"
-    kuka_planner_cs	= Orocos.name_service.get "manipulatorplanner_cs"
-    fake_robot          = Orocos.name_service.get "plant"
+    kuka_planner	= Orocos.name_service.get "manipulatorplanner"
+    fake_robot      = Orocos.name_service.get "plant"
 
-	Orocos.apply_conf_file( kuka_planner_js,'./config/MotionPlanner.yml', ['kuka'] )    
-	Orocos.apply_conf_file( kuka_planner_cs,'./config/MotionPlanner.yml', ['kuka'] )    
+	Orocos.apply_conf_file( kuka_planner,'./config/MotionPlanner.yml', ['kuka'] )    
 	Orocos.apply_conf_file( fake_robot,'./config/trajectory_generation_TestPlant.yml', ['kuka'])
    
 
-    kuka_planner_js.configure
-    kuka_planner_cs.configure
+    kuka_planner.configure
     fake_robot.configure
 
-    fake_robot.joint_state.connect_to kuka_planner_js.joints_status
-    fake_robot.joint_state.connect_to kuka_planner_cs.joints_status
+    fake_robot.joint_state.connect_to kuka_planner.joints_status
 
     fake_robot.start   
     sleep 2.0
-    kuka_planner_js.start
-    kuka_planner_cs.start
+    kuka_planner.start
 
     fake_robotWriter = fake_robot.cmd.writer
     fake_robot_cmd = fake_robotWriter.new_sample
@@ -42,15 +36,9 @@ Orocos.run  'motion_planners::JointSpaceTask'=>'manipulatorplanner_js',
     trajectory_data = Types.base.JointsTrajectory.new
     counter = 0
 
-    kuka_planner_js.planned_trajectory.connect_to do |data|
+    kuka_planner.planned_trajectory.connect_to do |data|
         trajectory_data = data
-		puts "Got inout trajectory of size #{trajectory_data.elements[0].size()} in JS"
-        timer.start(100.0)
-    end
-
-    kuka_planner_cs.planned_trajectory.connect_to do |data|
-        trajectory_data = data
-		puts "Got inout trajectory of size #{trajectory_data.elements[0].size()} in CS"
+		puts "Got inout trajectory of size #{trajectory_data.elements[0].size()}"
         timer.start(100.0)
     end
 
@@ -116,7 +104,7 @@ Orocos.run  'motion_planners::JointSpaceTask'=>'manipulatorplanner_js',
 
     Vizkit.exec
     fake_robot.stop
-    kuka_planner_js.stop
+    kuka_planner.stop
 
-    Orocos.watch(kuka_planner_js, fake_robot)   
+    Orocos.watch(kuka_planner, fake_robot)   
 end
