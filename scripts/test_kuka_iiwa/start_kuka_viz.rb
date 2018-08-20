@@ -10,14 +10,14 @@ robot_viz.modelFile = './data/kuka_iiwa.urdf'
 
  
 Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
-            'trajectory_generation::TestPlant' =>'plant', :output => nil do
+            'joint_control::FakeJointDriverTask' => 'plant', :output => nil do
 
 
     kuka_planner	= Orocos.name_service.get "manipulatorplanner"
     fake_robot      = Orocos.name_service.get "plant"
 
 	Orocos.apply_conf_file( kuka_planner,'./config/MotionPlanner.yml', ['kuka'] )    
-	Orocos.apply_conf_file( fake_robot,'./config/trajectory_generation_TestPlant.yml', ['kuka'])
+	Orocos.apply_conf_file( fake_robot,'./config/plant.yml', ['default','kuka_arm'], true)
    
 
     kuka_planner.configure
@@ -29,7 +29,7 @@ Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
     sleep 2.0
     kuka_planner.start
 
-    fake_robotWriter = fake_robot.cmd.writer
+    fake_robotWriter = fake_robot.command.writer
     fake_robot_cmd = fake_robotWriter.new_sample
 
     timer = Qt::Timer.new

@@ -1,0 +1,49 @@
+--- name:default
+# Deprecated and unused
+control_mode: position
+# Cycle time in second
+cycle_time: 0.01
+# Measurement noise standard deviation. Defaults to zero
+meas_noise_std_dev: 0.0
+# Deprecated and unused
+velocity_timeout: 0.0
+
+--- name:kuka_arm
+# Initial state of the fake driver. If left empty, zero for all values is assumed
+initial_joint_state:
+  names: ["joint_a1",
+          "joint_a2",
+          "joint_a3",
+          "joint_a4",
+          "joint_a5",
+          "joint_a6", 
+          "joint_a7"]
+  elements: [{position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}, # shoulder_pan_joint
+             {position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}, # shoulder_lift_joint
+             {position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}, # elbow_joint
+             {position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}, # wrist_1_joint
+             {position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}, # wrist_2_joint
+             {position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}, # wrist_3_joint
+             {position: 0.0, speed: 0.0, raw: 0.0, effort: 0.0, acceleration: 0.0}] # wrist_3_joint
+
+# Position Controller PID values (Note: Right now, only kp is used)
+# This property determines the number of joints
+pos_pid: [{kp: 1.0, maxPWM: 1.0},  # shoulder_pan_joint
+          {kp: 1.0, maxPWM: 1.0},  # shoulder_lift_joint
+          {kp: 1.0, maxPWM: 1.0},  # elbow_joint
+          {kp: 1.0, maxPWM: 1.0},  # wrist_1_joint
+          {kp: 1.0, maxPWM: 1.0},  # wrist_2_joint
+          {kp: 1.0, maxPWM: 1.0},  # wrist_3_joint
+          {kp: 1.0, maxPWM: 1.0}]  # wrist_3_joint
+
+# Velocity Controller PID values (Note: Right now, only kp is used)
+vel_pid: [{kp: 1.0, maxPWM: 1.0},  # shoulder_pan_joint
+          {kp: 1.0, maxPWM: 1.0},  # shoulder_lift_joint
+          {kp: 1.0, maxPWM: 1.0},  # elbow_joint
+          {kp: 1.0, maxPWM: 1.0},  # wrist_1_joint
+          {kp: 1.0, maxPWM: 1.0},  # wrist_2_joint
+          {kp: 1.0, maxPWM: 1.0},  # wrist_3_joint
+          {kp: 1.0, maxPWM: 1.0}]  # wrist_3_joint
+
+
+
