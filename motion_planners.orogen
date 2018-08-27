@@ -28,7 +28,7 @@ task_context "PlannerTask" do
                     'UNKNOWN_STATE'
     
     # Planner Config
-    property("planner_config", "/motion_planners/PlannerConfig")
+    property("config", "/motion_planners/Config")
 
     # Input port.
     input_port("joints_status", "/base/samples/Joints").

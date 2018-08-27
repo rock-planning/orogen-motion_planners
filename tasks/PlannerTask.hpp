@@ -9,6 +9,7 @@
 #include "motion_planners/Config.hpp"
 
 #include <base/samples/RigidBodyState.hpp>
+#include <base/samples/Pointcloud.hpp>
 
 namespace motion_planners{
 
@@ -39,8 +40,10 @@ namespace motion_planners{
 	base::JointsTrajectory solution_;
 	
 	motion_planners::PlannerStatus planner_status_;
-	motion_planners::PlannerConfig planner_config_;
+	motion_planners::Config config_;
 	motion_planners::CollisionInformation collision_information_;
+	
+	base::samples::Pointcloud input_ptcloud, debug_ptcloud;
 
 
     public:
@@ -125,7 +128,8 @@ namespace motion_planners{
         base::commands::Joints target_joints_angle_;
 	
         void plan(base::commands::Joints &target_joints_angle);			
-        void plan(base::samples::RigidBodyState &target_pose);	
+        void plan(base::samples::RigidBodyState &target_pose);
+	void solve();
     };
 }
 

@@ -27,9 +27,9 @@ bool PlannerTask::configureHook()
     if (! PlannerTaskBase::configureHook())
         return false;
 
-    planner_config_ = _planner_config.value();
+    config_ = _config.value();
     
-    planner_.reset(new motion_planners::MotionPlanners(planner_config_));
+    planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
     {
 	setPlannerStatus(planner_status_);
@@ -58,6 +58,22 @@ void PlannerTask::updateHook()
 	state(NO_JOINT_STATUS);
 	return ;
     }
+        
+    // read pointcloud cloud
+    if(_environment_in.readNewest(input_ptcloud) == RTT::NewData)
+    {        
+        if(!input_ptcloud.points.empty())
+        {
+	    planner_->updatePointcloud(input_ptcloud, Eigen::Vector3d::Zero());
+	}
+	
+	// debug
+	if(_environment_out.connected())
+	{
+	    planner_->getEnviornmentPointcloud(debug_ptcloud);
+	    _environment_out.write(debug_ptcloud);
+	}    
+    }
     
     // plan for target joint angles
     if(_target_joints_angle.read(target_joints_angle_) == RTT::NewData)
@@ -72,6 +88,9 @@ void PlannerTask::updateHook()
 	planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
         plan(target_pose_);
     }
+    
+    
+    
 }
 
 void PlannerTask::plan(base::samples::RigidBodyState &target_pose)
@@ -80,28 +99,9 @@ void PlannerTask::plan(base::samples::RigidBodyState &target_pose)
 
     //planned_trajectory.clear();    
    
-    if(planner_->assignPlanningRequest(joints_status_, target_pose, planner_config_.robot_model.planning_group_name, planner_status_))
-    {
+    if(planner_->assignPlanningRequest(joints_status_, target_pose, config_.planner_config.robot_model.planning_group_name, planner_status_))
+	solve();
     
-	if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
-	{
-	    collision_information_.collision_pair_names = planner_->getCollisionObjectNames();
-	    _collision_information.write(collision_information_);
-	}
-	else
-	{
-	    setPlannerStatus(planner_status_);
-	    bool res = planner_->solve(solution_, planner_status_);
-	    std::cout<<"Solve result = "<< res<<std::endl;
-	    if(res)
-	    {std::cout<<"Solution size = "<<solution_.size()<<std::endl;
-		_planned_trajectory.write(solution_);
-		//state(PATH_FOUND);
-	    }
-	    
-	}
-    }
-    std::cout<<"klkl "<<planner_status_.statuscode<<"  "<<planner_status_.kinematic_status.statuscode<<std::endl;
     setPlannerStatus(planner_status_);
 }
 
@@ -109,29 +109,28 @@ void PlannerTask::plan(base::commands::Joints &target_joints_angle)
 {
     state(GOAL_RECEIVED);
 
-    //planned_trajectory.clear();
-    
+    //planned_trajectory.clear();    
    
-    planner_->assignPlanningRequest(joints_status_, target_joints_angle, planner_config_.robot_model.planning_group_name, planner_status_);
+    if(planner_->assignPlanningRequest(joints_status_, target_joints_angle, config_.planner_config.robot_model.planning_group_name, planner_status_))    
+	solve();
     
+    setPlannerStatus(planner_status_);
+}
+
+void PlannerTask::solve()
+{
     if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
     {
 	collision_information_.collision_pair_names = planner_->getCollisionObjectNames();
-        _collision_information.write(collision_information_);
-	setPlannerStatus(planner_status_);
+	_collision_information.write(collision_information_);	    
     }
     else
     {
 	setPlannerStatus(planner_status_);
     
-	if(planner_->solve(solution_, planner_status_))
-	{
-	    _planned_trajectory.write(solution_);
-	    //state(PATH_FOUND);
-	}
-	
-	setPlannerStatus(planner_status_);
-    }
+	if(planner_->solve(solution_, planner_status_))	
+	    _planned_trajectory.write(solution_);	    
+    }    
 }
 
 

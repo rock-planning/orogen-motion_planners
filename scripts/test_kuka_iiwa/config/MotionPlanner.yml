@@ -1,19 +1,25 @@
 --- name:kuka
 
 # Planner Properties.
-planner_config:
-  kinematics_config:
-    kinematic_solver: :KDL
-    base_name: 'base_link'
-    tip_name: 'link_7'
-    joints_weight: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    number_of_joints: 7
-    urdf_file: "./data/kuka_iiwa.urdf"
-  robot_model:
-    urdf_file: "./data/kuka_iiwa.urdf"
-    srdf_file: "./data/kuka_iiwa.srdf"
-    planning_group_name: manipulator
-  #planner_specific_config: "./config/stomp.yml"
-  #planner: :STOMP
-  planner_specific_config: "./config/ompl.yml"
-  planner: :OMPL 
+config:
+  planner_config:
+    kinematics_config:
+      kinematic_solver: :KDL
+      base_name: 'base_link'
+      tip_name: 'link_7'
+      joints_weight: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      number_of_joints: 7
+      urdf_file: "./data/kuka_iiwa.urdf"
+    robot_model:
+      urdf_file: "./data/kuka_iiwa.urdf"
+      srdf_file: "./data/kuka_iiwa.srdf"
+      planning_group_name: manipulator
+    #planner_specific_config: "./config/stomp.yml"
+    #planner: :STOMP
+    planner_specific_config: "./config/ompl.yml"
+    planner: :OMPL 
+  env_config:
+    env_frame: ""
+    octree_resolution: 0.05
+    env_object_name: ""
+    
