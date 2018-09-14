@@ -28,6 +28,7 @@ bool PlannerTask::configureHook()
         return false;
 
     config_ = _config.value();
+    input_ptcloud.points.clear();
     
     planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
@@ -40,7 +41,10 @@ bool PlannerTask::configureHook()
 bool PlannerTask::startHook()
 {
     if (! PlannerTaskBase::startHook())
-        return false;
+        return false;    
+    
+    planner_->assignPlanningScene(Eigen::Vector3d::Zero());
+    
     return true;
 }
 
@@ -70,7 +74,7 @@ void PlannerTask::updateHook()
 	// debug
 	if(_environment_out.connected())
 	{
-	    planner_->getEnviornmentPointcloud(debug_ptcloud);
+	    planner_->getSelfFilteredPointcloud(debug_ptcloud);
 	    _environment_out.write(debug_ptcloud);
 	}    
     }
