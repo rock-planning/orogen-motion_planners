@@ -103,7 +103,7 @@ void PlannerTask::plan(base::samples::RigidBodyState &target_pose)
 
     //planned_trajectory.clear();    
    
-    if(planner_->assignPlanningRequest(joints_status_, target_pose, config_.planner_config.robot_model.planning_group_name, planner_status_))
+    if(planner_->assignPlanningRequest(joints_status_, target_pose, config_.planner_config.robot_model_config.planning_group_name, planner_status_))
 	solve();
     
     setPlannerStatus(planner_status_);
@@ -115,7 +115,7 @@ void PlannerTask::plan(base::commands::Joints &target_joints_angle)
 
     //planned_trajectory.clear();    
    
-    if(planner_->assignPlanningRequest(joints_status_, target_joints_angle, config_.planner_config.robot_model.planning_group_name, planner_status_))    
+    if(planner_->assignPlanningRequest(joints_status_, target_joints_angle, config_.planner_config.robot_model_config.planning_group_name, planner_status_))    
 	solve();
     
     setPlannerStatus(planner_status_);
