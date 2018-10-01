@@ -44,6 +44,10 @@ task_context "PlannerTask" do
 	doc("Target pose")
    
     # Output port.
+    output_port("time_taken", "/double").
+	doc("Time taken for solving the problem. This time represent how long it took for the
+	solver to solve the problem.")
+        
     output_port("planned_trajectory", "/base/JointsTrajectory").
         doc("The planned trajectory which should be followed")
 

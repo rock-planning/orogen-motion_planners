@@ -132,8 +132,12 @@ void PlannerTask::solve()
     {
 	setPlannerStatus(planner_status_);
     
-	if(planner_->solve(solution_, planner_status_))	
-	    _planned_trajectory.write(solution_);	    
+	solving_time_ = 0.0;
+	if(planner_->solve(solution_, planner_status_, solving_time_))
+	    _planned_trajectory.write(solution_);
+	
+	setPlannerStatus(planner_status_);	
+	_time_taken.write(solving_time_);
     }    
 }
 
@@ -142,6 +146,8 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
 {    
     switch(planner_status.statuscode)
     {
+	case motion_planners::PlannerStatus::PATH_FOUND:
+            state(PATH_FOUND); break;
         case motion_planners::PlannerStatus::NO_PATH_FOUND:
             state(NO_PATH_FOUND); break;
         case motion_planners::PlannerStatus::START_STATE_IN_COLLISION:

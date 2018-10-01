@@ -38,6 +38,7 @@ namespace motion_planners{
 	std::shared_ptr<motion_planners::MotionPlanners> planner_;
 	
 	base::JointsTrajectory solution_;
+	double solving_time_;
 	
 	motion_planners::PlannerStatus planner_status_;
 	motion_planners::Config config_;
