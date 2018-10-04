@@ -44,7 +44,7 @@ task_context "PlannerTask" do
 	doc("Target pose")
    
     # Output port.
-    output_port("time_taken", "/double").
+    output_port("solving_time", "/double").
 	doc("Time taken for solving the problem. This time represent how long it took for the
 	solver to solve the problem.")
         

@@ -4,7 +4,7 @@ stomp:
   min_rollouts_: 5
   num_rollouts_per_iteration_: 10 #50
   num_iterations_: 30 #120 
-  num_time_steps_: 50
+  num_time_steps_: 20 #50
   num_dimensions_: 7
   movement_duration_: 5.0 #1.0
   control_cost_weight_: 0.001
@@ -26,8 +26,8 @@ stomp:
 
 debug:
   output_dir_: ./debug_data
-  save_noisy_trajectories_: true #false
-  save_noiseless_trajectories_: true #false
-  save_cost_function_: true #false
-  write_to_file_: true #false
+  save_noisy_trajectories_: false
+  save_noiseless_trajectories_: false
+  save_cost_function_: false
+  write_to_file_: false
 

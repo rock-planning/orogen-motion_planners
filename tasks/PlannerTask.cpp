@@ -137,7 +137,7 @@ void PlannerTask::solve()
 	    _planned_trajectory.write(solution_);
 	
 	setPlannerStatus(planner_status_);	
-	_time_taken.write(solving_time_);
+	_solving_time.write(solving_time_);
     }    
 }
 
