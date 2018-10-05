@@ -13,7 +13,7 @@ task_context "PlannerTask" do
     # Configuration needed
     needs_configuration
     runtime_states  'GOAL_RECEIVED', 'PLANNING', 'MISSING_TRANSFORMATION', 'PATH_FOUND', 'NO_PATH_FOUND', 'TIMEOUT',
-                    'START_STATE_IN_COLLISION', 'GOAL_STATE_IN_COLLISION', 'COLLISION_LINK_NAME',
+                    'START_STATE_IN_COLLISION', 'GOAL_STATE_IN_COLLISION',
                     'INVALID_START_STATE', 'INVALID_GOAL_STATE',  'UNRECOGNIZED_GOAL_TYPE',
                     'APPROXIMATE_SOLUTION','CRASH','NO_JOINT_STATUS',
                     'START_JOINTANGLES_NOT_AVAILABLE', 'GOAL_JOINTANGLES_NOT_AVAILABLE',

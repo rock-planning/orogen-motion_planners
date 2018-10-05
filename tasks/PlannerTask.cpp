@@ -92,9 +92,6 @@ void PlannerTask::updateHook()
 	planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
         plan(target_pose_);
     }
-    
-    
-    
 }
 
 void PlannerTask::plan(base::samples::RigidBodyState &target_pose)
@@ -119,26 +116,24 @@ void PlannerTask::plan(base::commands::Joints &target_joints_angle)
 	solve();
     
     setPlannerStatus(planner_status_);
-}
-
-void PlannerTask::solve()
-{
+    
     if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
     {
 	collision_information_.collision_pair_names = planner_->getCollisionObjectNames();
 	_collision_information.write(collision_information_);	    
     }
-    else
-    {
-	setPlannerStatus(planner_status_);
+}
+
+void PlannerTask::solve()
+{    
+    state(PLANNING);
+
+    solving_time_ = 0.0;
+    if(planner_->solve(solution_, planner_status_, solving_time_))
+	_planned_trajectory.write(solution_);
     
-	solving_time_ = 0.0;
-	if(planner_->solve(solution_, planner_status_, solving_time_))
-	    _planned_trajectory.write(solution_);
-	
-	setPlannerStatus(planner_status_);	
-	_solving_time.write(solving_time_);
-    }    
+    setPlannerStatus(planner_status_);
+    _solving_time.write(solving_time_);    
 }
 
 
@@ -164,8 +159,6 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
             state(CONSTRAINED_POSE_NOT_WITHIN_BOUNDS); break;
         case motion_planners::PlannerStatus::TIMEOUT:
             state(TIMEOUT); break;
-        case motion_planners::PlannerStatus::COLLISION_LINK_NAME:
-            state(COLLISION_LINK_NAME); break;
         case motion_planners::PlannerStatus::INVALID_START_STATE:
             state(INVALID_START_STATE); break;
         case motion_planners::PlannerStatus::INVALID_GOAL_STATE:
