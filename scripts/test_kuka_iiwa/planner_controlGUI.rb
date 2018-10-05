@@ -59,7 +59,7 @@ def getTask(name, taskArray = nil)
 end
 
 
-class ArtemisPlannerGui
+class KukaPlannerGui
     attr_accessor :widget
 
     def initialize        
@@ -79,16 +79,16 @@ class ArtemisPlannerGui
     def configure( planner_tasks)
 
 		if (planner_tasks.size == 1) && (planner_tasks[0].name == "manipulatorplanner")
-			@artemis_planner = planner_tasks[0].task
-			planner_tasks[0].task = @artemis_planner
+			@kuka_planner = planner_tasks[0].task
+			planner_tasks[0].task = @kuka_planner
 
 		    # planner - input joint angle
-		    @artemis_planner_JsWriter = @artemis_planner.target_joints_angle.writer        
+		    @kuka_planner_JsWriter = @kuka_planner.target_joints_angle.writer        
 
 		    # planner - input target pose
-		    @artemis_planner_TpWriter = @artemis_planner.target_pose.writer		    
+		    @kuka_planner_TpWriter = @kuka_planner.target_pose.writer		    
 		    
-		    @artemis_planner.port('state').connect_to do |data|
+		    @kuka_planner.port('state').connect_to do |data|
 		        updateStatusENUM()
 		    end
 
@@ -138,7 +138,7 @@ class ArtemisPlannerGui
     end
 
     def updateStatusENUM () 
-        case @artemis_planner.state
+        case @kuka_planner.state
         when :PATH_FOUND
             updateStatus ("PATH FOUND")
         when :NO_PATH_FOUND
@@ -151,8 +151,8 @@ class ArtemisPlannerGui
             updateStatus ("GOAL STATE IN COLLISION")
         when :PLANNER_TIMEOUT
             updateStatus ("PLANNER TIMEOUT")            
-        when :COLLISION_LINK_NAME
-            updateStatus ("COLLISION")
+        when :PLANNING
+            updateStatus ("PLANNING")
         end
     end
 
@@ -221,7 +221,7 @@ class ArtemisPlannerGui
         joint_state6.speed = 1.0 #motor RPM
 
         joint_state7 = Types::Base::JointState.new
-        joint_state7.position = 0.0
+        joint_state7.position = @widget.dSB_jt_7.value()* Math::PI / 180.0
         joint_state7.speed = 1.0 #motor RPM
 
         @joints_command.elements.push(joint_state1)
@@ -232,7 +232,7 @@ class ArtemisPlannerGui
         @joints_command.elements.push(joint_state6)
         @joints_command.elements.push(joint_state7)
 
-        @artemis_planner_JsWriter.write @joints_command
+        @kuka_planner_JsWriter.write @joints_command
     end
 
 
@@ -249,7 +249,7 @@ class ArtemisPlannerGui
 	    @pose_command.sourceFrame = 'base_link'
 	    @pose_command.targetFrame = 'link_7'
        
-        @artemis_planner_TpWriter.write @pose_command
+        @kuka_planner_TpWriter.write @pose_command
     end
 
     def run
@@ -261,13 +261,13 @@ end
 
 
 
-gui = ArtemisPlannerGui.new
+gui = KukaPlannerGui.new
 configured = false
 
 gui.widget.connect_to_task "" do |task|
 	
 	allTasks = Array.new()
-	artemis_planner           = getTask('manipulatorplanner', allTasks)
+	kuka_planner           = getTask('manipulatorplanner', allTasks)
 
 	if(allTasks.size == 0)
 		puts "No task is availalble"
