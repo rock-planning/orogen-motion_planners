@@ -1,0 +1,30 @@
+sqp:
+  improve_ratio_threshold: .2
+  min_trust_box_size: 1e-4
+  min_approx_improve: 1e-4
+  min_approx_improve_frac: 1e-2 #-INFINITY
+  max_iter: 40
+  trust_shrink_ratio: 0.1
+  trust_expand_ratio: 1.5
+  cnt_tolerance: 1e-4
+  max_merit_coeff_increases: 5
+  merit_coeff_increase_ratio: 1
+  merit_error_coeff: 20
+  trust_box_size: 1
+basic_info:
+  no_of_samples: 20
+  planning_group: manipulator
+costs:
+  - type: "collision"
+    name: "collision"
+    params:
+      continuous: true
+      coeffs: [20]
+      dist_pen: [0.025]
+constraints:
+  - type: "joint_vel_limits"
+    params:
+      vals: [0.6]      
+      # vals: [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6]
+debug_config:
+  use_collision_check: false
