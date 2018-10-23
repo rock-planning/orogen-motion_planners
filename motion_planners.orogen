@@ -25,6 +25,7 @@ task_context "PlannerTask" do
 		    'NO_IK_SOLUTION', 'NO_FK_SOLUTION', 'IK_TIMEOUT',
                     'PLANNING_REQUEST_SUCCESS', 'ROBOTMODEL_INITIALISATION_FAILED',
                     'PLANNER_INITIALISATION_FAILED',
+                    'MODEL_OBJECT_ERROR',
                     'UNKNOWN_STATE'
     
     # Planner Config
@@ -42,6 +43,13 @@ task_context "PlannerTask" do
         
     input_port("target_pose", "/base/samples/RigidBodyState").
 	doc("Target pose")
+	
+    input_port("known_object", "/motion_planners/ModelObject").
+        doc("Add/Remove known model object in the environment. This object is considered to an external object")
+
+    input_port("grasp_object", "/motion_planners/ModelObject").
+        doc("Add/Remove an object at any link of the robot. This object is considered as a robot's link")
+
    
     # Output port.
     output_port("solving_time", "/double").

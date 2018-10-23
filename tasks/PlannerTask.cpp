@@ -79,6 +79,20 @@ void PlannerTask::updateHook()
 	}    
     }
     
+    // adding or removing an object in the world.
+    if(_known_object.readNewest(known_object_) == RTT::NewData)
+    {   
+	if(!planner_->handleCollisionObjectInWorld(known_object_))
+	    state(MODEL_OBJECT_ERROR);
+    }
+
+    // adding or removing an object to the manipulator.
+    if(_grasp_object.readNewest(grasp_object_) == RTT::NewData)
+    {
+	if(!planner_->handleGraspObject(grasp_object_))    
+	    state(MODEL_OBJECT_ERROR);        
+    }   
+    
     // plan for target joint angles
     if(_target_joints_angle.read(target_joints_angle_) == RTT::NewData)
     {
