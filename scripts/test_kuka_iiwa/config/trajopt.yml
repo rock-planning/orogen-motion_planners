@@ -13,7 +13,6 @@ sqp:
   trust_box_size: 1
 basic_info:
   no_of_samples: 20
-  planning_group: manipulator
 costs:
   - type: "collision"
     name: "collision"
