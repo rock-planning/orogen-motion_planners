@@ -42,8 +42,8 @@ bool PlannerTask::startHook()
 {
     if (! PlannerTaskBase::startHook())
         return false;    
-    
-    planner_->assignPlanningScene(Eigen::Vector3d::Zero());
+    if(_environment_in.connected())
+	planner_->assignPlanningScene(Eigen::Vector3d::Zero());
     
     return true;
 }
