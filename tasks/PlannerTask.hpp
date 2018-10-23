@@ -43,9 +43,9 @@ namespace motion_planners{
 	motion_planners::PlannerStatus planner_status_;
 	motion_planners::Config config_;
 	motion_planners::CollisionInformation collision_information_;
+	motion_planners::ModelObject known_object_, grasp_object_;
 	
 	base::samples::Pointcloud input_ptcloud, debug_ptcloud;
-
 
     public:
         /** TaskContext constructor for PlannerTask
