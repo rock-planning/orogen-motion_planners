@@ -8,7 +8,6 @@ config:
       base_name: 'base_link'
       tip_name: 'link_7'
       joints_weight: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-      number_of_joints: 7
       urdf_file: "./data/kuka_iiwa.urdf"
     robot_model_config:
       urdf_file: "./data/kuka_iiwa.urdf"
