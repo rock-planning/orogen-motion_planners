@@ -127,6 +127,8 @@ namespace motion_planners{
         
 	base::samples::RigidBodyState target_pose_;
         base::commands::Joints target_joints_angle_;
+	void updatePlanningscene();
+	void writeCollisionObjectNames();
 	
         void plan(base::commands::Joints &target_joints_angle);			
         void plan(base::samples::RigidBodyState &target_pose);
