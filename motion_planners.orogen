@@ -13,18 +13,16 @@ task_context "PlannerTask" do
     # Configuration needed
     needs_configuration
     runtime_states  'GOAL_RECEIVED', 'PLANNING', 'MISSING_TRANSFORMATION', 'PATH_FOUND', 'NO_PATH_FOUND', 'TIMEOUT',
-					'START_STATE_IN_COLLISION', 'GOAL_STATE_IN_COLLISION',
-					'INVALID_START_STATE', 'INVALID_GOAL_STATE',  'UNRECOGNIZED_GOAL_TYPE',
-					'APPROXIMATE_SOLUTION','CRASH','NO_JOINT_STATUS',
-					'START_JOINTANGLES_NOT_AVAILABLE', 'GOAL_JOINTANGLES_NOT_AVAILABLE',
-					'CONSTRAINED_POSE_NOT_WITHIN_BOUNDS', 					
-					'KDL_TREE_FAILED', 'KDL_CHAIN_FAILED', 'URDF_FAILED', 'NO_KINEMATIC_SOLVER_FOUND', 'IK_FOUND',
-					'NO_IK_SOLUTION', 'NO_FK_SOLUTION', 'IK_TIMEOUT', 'IK_JOINTLIMITS_VIOLATED', 'INVALID_KINEMATIC_STATE',					
-					'PLANNING_REQUEST_SUCCESS', 'ROBOTMODEL_INITIALISATION_FAILED',
-					'PLANNER_INITIALISATION_FAILED',
-					'MODEL_OBJECT_ERROR',
-					'UNKNOWN_STATE'
-    
+                    'START_STATE_IN_COLLISION', 'GOAL_STATE_IN_COLLISION',
+                    'INVALID_START_STATE', 'INVALID_GOAL_STATE',  'UNRECOGNIZED_GOAL_TYPE',
+                    'APPROXIMATE_SOLUTION','CRASH','NO_JOINT_STATUS',
+                    'START_JOINTANGLES_NOT_AVAILABLE', 'GOAL_JOINTANGLES_NOT_AVAILABLE',
+                    'CONSTRAINED_POSE_NOT_WITHIN_BOUNDS', 
+                    'KDL_TREE_FAILED', 'KDL_CHAIN_FAILED', 'URDF_FAILED', 'NO_KINEMATIC_SOLVER_FOUND', 'IK_FOUND',
+                    'NO_IK_SOLUTION', 'NO_FK_SOLUTION', 'IK_TIMEOUT', 'IK_JOINTLIMITS_VIOLATED', 'INVALID_KINEMATIC_STATE',
+                    'PLANNING_REQUEST_SUCCESS', 'ROBOTMODEL_INITIALISATION_FAILED',
+                    'PLANNER_INITIALISATION_FAILED', 'MODEL_OBJECT_ERROR', 'UNKNOWN_STATE'
+
     # Planner Config
     property("config", "/motion_planners/Config")
 
@@ -34,25 +32,25 @@ task_context "PlannerTask" do
 
     input_port("environment_in", "/base/samples/Pointcloud").
         doc("Poincloud data representing the environment in the body frame")
-        
+
     input_port("target_joints_angle", "/base/commands/Joints").
         doc("Target joints angles")
-        
+
     input_port("target_pose", "/base/samples/RigidBodyState").
-	doc("Target pose")
-	
+        doc("Target pose")
+
     input_port("known_object", "/motion_planners/ModelObject").
         doc("Add/Remove known model object in the environment. This object is considered to an external object")
 
     input_port("grasp_object", "/motion_planners/ModelObject").
         doc("Add/Remove an object at any link of the robot. This object is considered as a robot's link")
 
-   
+
     # Output port.
     output_port("solving_time", "/double").
-	doc("Time taken for solving the problem. This time represent how long it took for the
-	solver to solve the problem.")
-        
+        doc("Time taken for solving the problem. This time represent how long it took for the
+            solver to solve the problem.")
+
     output_port("planned_trajectory", "/base/JointsTrajectory").
         doc("The planned trajectory which should be followed")
 
@@ -61,11 +59,10 @@ task_context "PlannerTask" do
 
     output_port("collision_information", "/motion_planners/CollisionInformation").
         doc("Collision objects names")      
-            
+
 
     port_driven
-        
-        
+
 #   Uncomment the following lines and also in the task side,
 #   if the poincloud is not in the body frame
 #    transformer do
@@ -74,8 +71,4 @@ task_context "PlannerTask" do
 #        max_latency 0.1
 #    end
 
-
 end
-
-                                                                     
-

@@ -16,9 +16,9 @@ Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
     kuka_planner	= Orocos.name_service.get "manipulatorplanner"
     fake_robot      = Orocos.name_service.get "plant"
 
-	Orocos.apply_conf_file( kuka_planner,'./config/MotionPlanner.yml', ['kuka'] )    
-	Orocos.apply_conf_file( fake_robot,'./config/plant.yml', ['default','kuka_arm'], true)
-   
+    Orocos.apply_conf_file( kuka_planner,'./config/MotionPlanner.yml', ['kuka'] )    
+    Orocos.apply_conf_file( fake_robot,'./config/plant.yml', ['default','kuka_arm'], true)
+
 
     kuka_planner.configure
     fake_robot.configure
@@ -38,7 +38,7 @@ Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
 
     kuka_planner.planned_trajectory.connect_to do |data|
         trajectory_data = data
-		puts "Got inout trajectory of size #{trajectory_data.elements[0].size()}"
+        puts "Got inout trajectory of size #{trajectory_data.elements[0].size()}"
         timer.start(100.0)
     end
 

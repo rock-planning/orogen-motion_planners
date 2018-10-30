@@ -39,22 +39,21 @@ end
 
 
 def getTask(name, taskArray = nil)
-	task = nil
+    task = nil
     begin
-	    task = Orocos.name_service.get name
-		puts "\n Task #{name} found"
-		if(taskArray)
-			struct = TaskStruct.new()
-			struct.name = name
-			struct.task = task
-			taskArray << struct
-		end
-	rescue Exception => e
+        task = Orocos.name_service.get name
+        puts "\n Task #{name} found"
+        if(taskArray)
+            struct = TaskStruct.new()
+            struct.name = name
+            struct.task = task
+            taskArray << struct
+        end
+    rescue Exception => e
         puts e.message
         puts "\nCould not find task #{name}."                 
         return nil
-        
-    end    
+    end
     return task
 end
 
@@ -62,11 +61,11 @@ end
 class KukaPlannerGui
     attr_accessor :widget
 
-    def initialize        
+    def initialize
         @widget = Vizkit.load ('planning_viz.ui')
-      
 
-        # initialsing the start pose        
+
+        # initialsing the start pose
         @widget.dSB_pos_x.setValue(0.0)
         @widget.dSB_pos_y.setValue(0.0)
         @widget.dSB_pos_z.setValue(0.0)
@@ -76,32 +75,33 @@ class KukaPlannerGui
 
     end
 
+
     def configure( planner_tasks)
 
-		if (planner_tasks.size == 1) && (planner_tasks[0].name == "manipulatorplanner")
-			@kuka_planner = planner_tasks[0].task
-			planner_tasks[0].task = @kuka_planner
+        if (planner_tasks.size == 1) && (planner_tasks[0].name == "manipulatorplanner")
+            @kuka_planner = planner_tasks[0].task
+            planner_tasks[0].task = @kuka_planner
 
-		    # planner - input joint angle
-		    @kuka_planner_JsWriter = @kuka_planner.target_joints_angle.writer        
+            # planner - input joint angle
+            @kuka_planner_JsWriter = @kuka_planner.target_joints_angle.writer        
 
-		    # planner - input target pose
-		    @kuka_planner_TpWriter = @kuka_planner.target_pose.writer		    
-		    
-		    @kuka_planner.port('state').connect_to do |data|
-		        updateStatusENUM()
-		    end
+            # planner - input target pose
+            @kuka_planner_TpWriter = @kuka_planner.target_pose.writer		    
 
-		end
-        
+            @kuka_planner.port('state').connect_to do |data|
+                updateStatusENUM()
+            end
+
+        end
+
         @joints_command = Types::Base::Commands::Joints.new
         @pose_command = Types::Base::Samples::RigidBodyState.new      
-        
-		planner_tasks
-    end    
+
+        planner_tasks
+    end
 
     def connect
-	    @widget.rB_target_joint_space.connect( SIGNAL('clicked()') ) { targetJointSpace }
+        @widget.rB_target_joint_space.connect( SIGNAL('clicked()') ) { targetJointSpace }
         @widget.rB_target_cartesian_space.connect( SIGNAL('clicked()') ) { targetCartesianSpace }
     end
 
@@ -178,8 +178,6 @@ class KukaPlannerGui
         @widget.dSB_jt_6.setEnabled(value)
     end
 
-    
-
     def planJointSpace    
         puts "Joint space planner input received"
         @joints_command.names.clear
@@ -246,9 +244,9 @@ class KukaPlannerGui
                                                                                         @widget.dSB_rot_y.value()* Math::PI / 180.0 ,
                                                                                         @widget.dSB_rot_x.value()* Math::PI / 180.0 ),
                                                                                         2,1,0)
-	    @pose_command.sourceFrame = 'base_link'
-	    @pose_command.targetFrame = 'link_7'
-       
+        @pose_command.sourceFrame = 'base_link'
+        @pose_command.targetFrame = 'link_7'
+
         @kuka_planner_TpWriter.write @pose_command
     end
 
@@ -265,17 +263,17 @@ gui = KukaPlannerGui.new
 configured = false
 
 gui.widget.connect_to_task "" do |task|
-	
-	allTasks = Array.new()
-	kuka_planner           = getTask('manipulatorplanner', allTasks)
 
-	if(allTasks.size == 0)
-		puts "No task is availalble"
-		exit
-	end
-	
+    allTasks = Array.new()
+    kuka_planner  = getTask('manipulatorplanner', allTasks)
+
+    if(allTasks.size == 0)
+        puts "No task is availalble"
+        exit
+    end
+
     gui.configure( allTasks)
-	gui.connect
+    gui.connect
 
     gui.widget.setEnabled(true)
     configured = true
