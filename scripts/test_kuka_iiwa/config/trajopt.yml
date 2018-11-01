@@ -10,7 +10,7 @@ sqp:
   max_merit_coeff_increases: 5
   merit_coeff_increase_ratio: 1
   merit_error_coeff: 20
-  trust_box_size: 1
+  trust_box_size: 2
 basic_info:
   no_of_samples: 20
 costs:
