@@ -49,11 +49,7 @@ void PlannerTask::updateHook()
     PlannerTaskBase::updateHook();
 
     // read the current joint angles        
-    if(_joints_status.readNewest(joints_status_) == RTT::NewData)
-    {
-	//state(RUNNING);
-    }
-    else
+    if(_joints_status.readNewest(joints_status_) == RTT::NoData)
     {
         state(NO_JOINT_STATUS);
         return ;

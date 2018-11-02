@@ -20,6 +20,7 @@ costs:
       continuous: true
       coeffs: [20]
       dist_pen: [0.025]
+      dist_to_collision_check: 0.02
 constraints:
   - type: "joint_vel_limits"
     params:
