@@ -25,6 +25,7 @@ bool PlannerTask::configureHook()
 
     config_ = _config.value();
     input_ptcloud.points.clear();
+    initialised_planning_scene_ = false;
 
     planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
@@ -38,8 +39,6 @@ bool PlannerTask::startHook()
 {
     if (! PlannerTaskBase::startHook())
         return false;    
-    if(_environment_in.connected())
-        planner_->assignPlanningScene(Eigen::Vector3d::Zero());
 
     return true;
 }
@@ -89,6 +88,12 @@ void PlannerTask::updatePlanningscene()
     // read pointcloud cloud
     if(_environment_in.readNewest(input_ptcloud) == RTT::NewData)
     {
+        if(!initialised_planning_scene_)
+        {
+            planner_->assignPlanningScene(Eigen::Vector3d::Zero());
+            initialised_planning_scene_ = true;
+        }
+        
         if(!input_ptcloud.points.empty())
             planner_->updatePointcloud(input_ptcloud, Eigen::Vector3d::Zero());
 
