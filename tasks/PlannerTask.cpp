@@ -79,6 +79,7 @@ void PlannerTask::updateHook()
     if(_target_pose.read(target_pose_) == RTT::NewData)
     {
         planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+        _debug_target_pose.write(target_pose_);
         plan(target_pose_);
     }
 }
@@ -252,4 +253,5 @@ void PlannerTask::stopHook()
 void PlannerTask::cleanupHook()
 {
     PlannerTaskBase::cleanupHook();
+
 }
