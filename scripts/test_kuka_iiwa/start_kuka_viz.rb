@@ -36,10 +36,18 @@ Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
     trajectory_data = Types.base.JointsTrajectory.new
     counter = 0
 
+    fake_robot.joint_state.connect_to do |data|
+        robot_viz.updateData(data)
+    end
+
     kuka_planner.planned_trajectory.connect_to do |data|
         trajectory_data = data
         puts "Got inout trajectory of size #{trajectory_data.elements[0].size()}"
-        timer.start(100.0)
+        if timer.isActive()
+            puts "Stopping the timer"
+            timer.stop()
+        end
+        timer.start(238.095)
     end
 
 
@@ -90,7 +98,7 @@ Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
         joints.elements.push(joint_state6)
         joints.elements.push(joint_state7)
 
-        robot_viz.updateData(joints)
+        #robot_viz.updateData(joints)
         fake_robotWriter.write(joints)
         joints.elements.clear()
 
