@@ -60,6 +60,9 @@ task_context "PlannerTask" do
     output_port("collision_information", "/motion_planners/CollisionInformation").
         doc("Collision objects names")      
 
+    output_port("debug_target_pose", "/base/samples/RigidBodyState").
+        doc("Target pose")
+
 
     port_driven
 

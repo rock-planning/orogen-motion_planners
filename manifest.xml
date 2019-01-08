@@ -1,14 +1,22 @@
 <package>
-  <description brief="">
-  
-  </description>
-  <author>Sankaranarayanan Natarajan/sankar.natarajan@dfki.de</author>
-  <license></license>
-  <url>http://</url>
-  <logo>http://</logo>  
-  <depend package="base/cmake" />
-  <depend package="planning/collision_detection" />
-  <depend package="planning/motion_planners" />
-  <depend package = "slam/pcl" /> 
-  <tags>needs_opt</tags>
+    <description brief=""></description>
+    <author>Sankaranarayanan Natarajan/sankar.natarajan@dfki.de</author>
+    <!-- Use the short version name from:https://spdx.org/licenses/ -->
+    <license></license>
+    <url>https://git.hb.dfki.de/dfki-planning/orogen-motion_planners.git</url>
+    <logo>http://</logo>
+    <depend package="base/cmake" />
+    <depend package="planning/collision_detection" />
+    <depend package="planning/motion_planners" />
+    <depend package="slam/pcl" />
+    <tags>needs_opt</tags>
+    <name>orogen-motion_planners</name>
+    <maintainer>Sankar/sankar.natarajan@dfki.de</maintainer>
+    <maintainer>Rohit menon/rohit.menon@dfki.de</maintainer>
+    <stage>-1</stage>
+    <keywords>
+        <keyword>planning</keyword>
+    </keywords>
+    <activity>active</activity>
+    <use>single project</use>
 </package>

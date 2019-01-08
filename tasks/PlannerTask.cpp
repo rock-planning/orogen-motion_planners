@@ -25,6 +25,7 @@ bool PlannerTask::configureHook()
 
     config_ = _config.value();
     input_ptcloud.points.clear();
+    initialised_planning_scene_ = false;
 
     planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
@@ -38,8 +39,6 @@ bool PlannerTask::startHook()
 {
     if (! PlannerTaskBase::startHook())
         return false;    
-    if(_environment_in.connected())
-        planner_->assignPlanningScene(Eigen::Vector3d::Zero());
 
     return true;
 }
@@ -49,11 +48,7 @@ void PlannerTask::updateHook()
     PlannerTaskBase::updateHook();
 
     // read the current joint angles        
-    if(_joints_status.readNewest(joints_status_) == RTT::NewData)
-    {
-	//state(RUNNING);
-    }
-    else
+    if(_joints_status.readNewest(joints_status_) == RTT::NoData)
     {
         state(NO_JOINT_STATUS);
         return ;
@@ -84,6 +79,7 @@ void PlannerTask::updateHook()
     if(_target_pose.read(target_pose_) == RTT::NewData)
     {
         planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+        _debug_target_pose.write(target_pose_);
         plan(target_pose_);
     }
 }
@@ -93,6 +89,12 @@ void PlannerTask::updatePlanningscene()
     // read pointcloud cloud
     if(_environment_in.readNewest(input_ptcloud) == RTT::NewData)
     {
+        if(!initialised_planning_scene_)
+        {
+            planner_->assignPlanningScene(Eigen::Vector3d::Zero());
+            initialised_planning_scene_ = true;
+        }
+        
         if(!input_ptcloud.points.empty())
             planner_->updatePointcloud(input_ptcloud, Eigen::Vector3d::Zero());
 
@@ -251,4 +253,5 @@ void PlannerTask::stopHook()
 void PlannerTask::cleanupHook()
 {
     PlannerTaskBase::cleanupHook();
+
 }
