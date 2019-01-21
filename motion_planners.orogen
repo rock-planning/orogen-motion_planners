@@ -3,8 +3,11 @@ name "motion_planners"
 # version "0.1"
 
 using_library "motion_planners"
+using_library "planning_environment"
 
 import_types_from "motion_planners/Config.hpp"
+import_types_from "planning_environment/Config.hpp"
+
 
 import_types_from "base"
 
@@ -32,6 +35,9 @@ task_context "PlannerTask" do
 
     input_port("environment_in", "/base/samples/Pointcloud").
         doc("Poincloud data representing the environment in the body frame")
+        
+    input_port("octomap_in", "/planning_environment/OctomapContainer").
+        doc("Octomap data representing the environment in the body frame")
 
     input_port("target_joints_angle", "/base/commands/Joints").
         doc("Target joints angles")

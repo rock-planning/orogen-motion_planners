@@ -91,7 +91,7 @@ void PlannerTask::updatePlanningscene()
     {
         if(!initialised_planning_scene_)
         {
-            planner_->assignPlanningScene(Eigen::Vector3d::Zero());
+            planner_->assignPointcloudPlanningScene(Eigen::Vector3d::Zero());
             initialised_planning_scene_ = true;
         }
         
@@ -105,6 +105,26 @@ void PlannerTask::updatePlanningscene()
             _environment_out.write(debug_ptcloud);
         }
     }
+    
+    // read octmap data and convert to octree
+    if(_octomap_in.readNewest(input_octomap_) == RTT::NewData)
+    {
+        
+        if(!input_octomap_.data.empty())
+        {
+       
+            input_octree_ = planning_environment::convertContainerToOctomap(input_octomap_);
+            
+            if(!initialised_planning_scene_)
+            {
+                planner_->assignOctomapPlanningScene(input_octree_, Eigen::Vector3d::Zero());
+                initialised_planning_scene_ = true;
+            }
+                        
+            planner_->updateOctomap(input_octree_, Eigen::Vector3d::Zero());
+        }        
+    }
+   
 }
 
 void PlannerTask::plan(base::samples::RigidBodyState &target_pose)

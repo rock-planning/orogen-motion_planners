@@ -11,6 +11,8 @@
 #include <base/samples/RigidBodyState.hpp>
 #include <base/samples/Pointcloud.hpp>
 
+#include <planning_environment/OctomapConverter.hpp>
+
 namespace motion_planners{
 
     /*! \class PlannerTask
@@ -46,6 +48,9 @@ namespace motion_planners{
             motion_planners::ModelObject known_object_, grasp_object_;
 
             base::samples::Pointcloud input_ptcloud, debug_ptcloud;
+            
+            planning_environment::OctomapContainer input_octomap_;
+            std::shared_ptr<octomap::OcTree> input_octree_;
 
         public:
             /** TaskContext constructor for PlannerTask
