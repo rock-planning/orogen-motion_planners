@@ -4,6 +4,7 @@ name "motion_planners"
 
 using_library "motion_planners"
 using_library "planning_environment"
+using_library "octomap"
 
 import_types_from "motion_planners/Config.hpp"
 import_types_from "planning_environment/Config.hpp"
