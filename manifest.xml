@@ -1,5 +1,5 @@
 <package>
-    <description brief=""></description>
+    <description brief="Orogen Component for the motion_planners library">
     <author>Sankaranarayanan Natarajan/sankar.natarajan@dfki.de</author>
     <!-- Use the short version name from:https://spdx.org/licenses/ -->
     <license></license>
