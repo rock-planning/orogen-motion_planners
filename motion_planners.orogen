@@ -36,7 +36,7 @@ task_context "PlannerTask" do
 
     input_port("environment_in", "/base/samples/Pointcloud").
         doc("Poincloud data representing the environment in the body frame")
-        
+
     input_port("octomap_in", "/planning_environment/OctomapContainer").
         doc("Octomap data representing the environment in the body frame")
 
@@ -45,6 +45,10 @@ task_context "PlannerTask" do
 
     input_port("target_pose", "/base/samples/RigidBodyState").
         doc("Target pose")
+
+    # Currently only optimization based planner can make use of this predicted trajectory.
+    input_port("predicted_trajectory", "/base/JointsTrajectory").
+        doc("Predicted trajectory for the given problem.")
 
     input_port("known_object", "/motion_planners/ModelObject").
         doc("Add/Remove known model object in the environment. This object is considered to an external object")

@@ -39,7 +39,7 @@ namespace motion_planners{
 
             std::shared_ptr<motion_planners::MotionPlanners> planner_;
 
-            base::JointsTrajectory solution_;
+            base::JointsTrajectory solution_, predicted_trajectory_;
             double solving_time_;
 
             motion_planners::PlannerStatus planner_status_;
@@ -135,10 +135,23 @@ namespace motion_planners{
             bool initialised_planning_scene_;
             void updatePlanningscene();
             void writeCollisionObjectNames();
-
-            void plan(base::commands::Joints &target_joints_angle);			
-            void plan(base::samples::RigidBodyState &target_pose);
             void solve();
+            void replan(base::JointsTrajectory &input_trajectory);
+            template<typename T>
+            void plan(T input)
+            {
+                updatePlanningscene();
+                state(GOAL_RECEIVED);
+
+                if(planner_->assignPlanningRequest(joints_status_, input, planner_status_))
+                {
+                    planner_->setStartAndGoal();  // this function will initialise the start and goal for the planner
+                    solve();
+                }
+                setPlannerStatus(planner_status_);
+                if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
+                    writeCollisionObjectNames();    
+            }
     };
 }
 

@@ -82,6 +82,13 @@ void PlannerTask::updateHook()
         _debug_target_pose.write(target_pose_);
         plan(target_pose_);
     }
+    
+    // plan using the predicted trajectory
+    if(_predicted_trajectory.read(predicted_trajectory_) == RTT::NewData)
+    {
+        planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;        
+        replan(predicted_trajectory_);
+    }
 }
 
 void PlannerTask::updatePlanningscene()
@@ -127,39 +134,23 @@ void PlannerTask::updatePlanningscene()
    
 }
 
-void PlannerTask::plan(base::samples::RigidBodyState &target_pose)
+
+void PlannerTask::replan(base::JointsTrajectory &input_trajectory)
 {
     updatePlanningscene();
 
     state(GOAL_RECEIVED);
+    
 
-    //planned_trajectory.clear();
-
-    if(planner_->assignPlanningRequest(joints_status_, target_pose, config_.planner_config.robot_model_config.planning_group_name, planner_status_))
+    if(planner_->usePredictedTrajectory(input_trajectory, planner_status_))
+    {
         solve();
+    }
 
     setPlannerStatus(planner_status_);
 
     if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
-        writeCollisionObjectNames();
-
-}
-
-void PlannerTask::plan(base::commands::Joints &target_joints_angle)
-{
-    updatePlanningscene();
-
-    state(GOAL_RECEIVED);
-
-    //planned_trajectory.clear();    
-
-    if(planner_->assignPlanningRequest(joints_status_, target_joints_angle, config_.planner_config.robot_model_config.planning_group_name, planner_status_))    
-        solve();
-
-    setPlannerStatus(planner_status_);
-
-    if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
-        writeCollisionObjectNames();	
+        writeCollisionObjectNames(); 
 
 }
 
