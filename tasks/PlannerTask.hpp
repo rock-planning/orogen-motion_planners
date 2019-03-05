@@ -9,7 +9,6 @@
 #include "motion_planners/Config.hpp"
 
 #include <base/samples/RigidBodyState.hpp>
-#include <base/samples/Pointcloud.hpp>
 
 #include <planning_environment/OctomapConverter.hpp>
 
@@ -47,8 +46,6 @@ namespace motion_planners{
             motion_planners::CollisionInformation collision_information_;
             motion_planners::ModelObject known_object_, grasp_object_;
 
-            base::samples::Pointcloud input_ptcloud, debug_ptcloud;
-            
             planning_environment::OctomapContainer input_octomap_;
             std::shared_ptr<octomap::OcTree> input_octree_;
 
@@ -137,21 +134,8 @@ namespace motion_planners{
             void writeCollisionObjectNames();
             void solve();
             void replan(base::JointsTrajectory &input_trajectory);
-            template<typename T>
-            void plan(T input)
-            {
-                updatePlanningscene();
-                state(GOAL_RECEIVED);
-
-                if(planner_->assignPlanningRequest(joints_status_, input, planner_status_))
-                {
-                    planner_->setStartAndGoal();  // this function will initialise the start and goal for the planner
-                    solve();
-                }
-                setPlannerStatus(planner_status_);
-                if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
-                    writeCollisionObjectNames();    
-            }
+            template<typename T> void plan(T input);
+           
     };
 }
 

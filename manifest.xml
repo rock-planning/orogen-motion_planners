@@ -9,7 +9,6 @@
     <depend package="planning/collision_detection" />
     <depend package="planning/motion_planners" />
     <depend package="planning/planning_environment" />
-    <depend package="slam/pcl" />
     <tags>needs_opt</tags>
     <name>orogen-motion_planners</name>
     <maintainer>Sankar/sankar.natarajan@dfki.de</maintainer>

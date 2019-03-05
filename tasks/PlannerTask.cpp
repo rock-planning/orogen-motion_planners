@@ -23,11 +23,11 @@ bool PlannerTask::configureHook()
     if (! PlannerTaskBase::configureHook())
         return false;
 
-    config_ = _config.value();
-    input_ptcloud.points.clear();
+    config_ = _config.value();    
     initialised_planning_scene_ = false;
 
     planner_.reset(new motion_planners::MotionPlanners(config_));
+
     if(!planner_->initialize(planner_status_))
     {
         setPlannerStatus(planner_status_);
@@ -64,7 +64,7 @@ void PlannerTask::updateHook()
     // adding or removing an object to the manipulator.
     if(_grasp_object.readNewest(grasp_object_) == RTT::NewData)
     {
-        if(!planner_->handleGraspObject(grasp_object_))    
+        if(!planner_->handleGraspObject(grasp_object_))
             state(MODEL_OBJECT_ERROR);        
     }
 
@@ -82,7 +82,7 @@ void PlannerTask::updateHook()
         _debug_target_pose.write(target_pose_);
         plan(target_pose_);
     }
-    
+
     // plan using the predicted trajectory
     if(_predicted_trajectory.read(predicted_trajectory_) == RTT::NewData)
     {
@@ -93,59 +93,34 @@ void PlannerTask::updateHook()
 
 void PlannerTask::updatePlanningscene()
 {
-    // read pointcloud cloud
-    if(_environment_in.readNewest(input_ptcloud) == RTT::NewData)
-    {
-        if(!initialised_planning_scene_)
-        {
-            planner_->assignPointcloudPlanningScene(Eigen::Vector3d::Zero());
-            initialised_planning_scene_ = true;
-        }
-        
-        if(!input_ptcloud.points.empty())
-            planner_->updatePointcloud(input_ptcloud, Eigen::Vector3d::Zero());
 
-        // debug
-        if(_environment_out.connected())
-        {
-            planner_->getSelfFilteredPointcloud(debug_ptcloud);
-            _environment_out.write(debug_ptcloud);
-        }
-    }
-    
     // read octmap data and convert to octree
     if(_octomap_in.readNewest(input_octomap_) == RTT::NewData)
     {
-        
         if(!input_octomap_.data.empty())
         {
-       
+            std::cout<<"Updated OCTMAP"<<std::endl;
             input_octree_ = planning_environment::convertContainerToOctomap(input_octomap_);
-            
+
             if(!initialised_planning_scene_)
             {
-                planner_->assignOctomapPlanningScene(input_octree_, Eigen::Vector3d::Zero());
+                planner_->assignOctomapPlanningScene(input_octree_);
                 initialised_planning_scene_ = true;
             }
-                        
-            planner_->updateOctomap(input_octree_, Eigen::Vector3d::Zero());
-        }        
-    }
-   
-}
 
+            planner_->updateOctomap(input_octree_);
+        }
+    }
+}
 
 void PlannerTask::replan(base::JointsTrajectory &input_trajectory)
 {
     updatePlanningscene();
 
     state(GOAL_RECEIVED);
-    
 
     if(planner_->usePredictedTrajectory(input_trajectory, planner_status_))
-    {
         solve();
-    }
 
     setPlannerStatus(planner_status_);
 
@@ -251,6 +226,22 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
             break;
         }
     }
+}
+
+template<typename T>
+void PlannerTask::plan(T input)
+{
+    updatePlanningscene();
+    state(GOAL_RECEIVED);
+
+    if(planner_->assignPlanningRequest(joints_status_, input, planner_status_))
+    {
+        planner_->setStartAndGoal();  // this function will initialise the start and goal for the planner
+        solve();
+    }
+    setPlannerStatus(planner_status_);
+    if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
+        writeCollisionObjectNames();    
 }
 
 void PlannerTask::errorHook()

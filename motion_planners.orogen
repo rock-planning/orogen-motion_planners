@@ -34,9 +34,6 @@ task_context "PlannerTask" do
     input_port("joints_status", "/base/samples/Joints").
         doc("Current joints angles")
 
-    input_port("environment_in", "/base/samples/Pointcloud").
-        doc("Poincloud data representing the environment in the body frame")
-
     input_port("octomap_in", "/planning_environment/OctomapContainer").
         doc("Octomap data representing the environment in the body frame")
 
