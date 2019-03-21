@@ -27,12 +27,13 @@ bool PlannerTask::configureHook()
     initialised_planning_scene_ = false;
 
     planner_.reset(new motion_planners::MotionPlanners(config_));
-
     if(!planner_->initialize(planner_status_))
     {
+		
         setPlannerStatus(planner_status_);
         return false;
     }
+	
     return true;
 }
 bool PlannerTask::startHook()
@@ -82,6 +83,12 @@ void PlannerTask::updateHook()
         _debug_target_pose.write(target_pose_);
         plan(target_pose_);
     }
+    
+    if(_target_group_state.read(target_group_state_) ==RTT::NewData)
+	{
+		planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+		plan(target_group_state_);
+	}
 
     // plan using the predicted trajectory
     if(_predicted_trajectory.read(predicted_trajectory_) == RTT::NewData)
