@@ -85,16 +85,23 @@ void PlannerTask::updateHook()
     }
     
     if(_target_group_state.read(target_group_state_) ==RTT::NewData)
-	{
-		planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
-		plan(target_group_state_);
-	}
+    {
+        planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+        plan(target_group_state_);
+    }
 
     // plan using the predicted trajectory
     if(_predicted_trajectory.read(predicted_trajectory_) == RTT::NewData)
     {
         planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;        
         replan(predicted_trajectory_);
+    }
+    
+    // plan for constrained target pose
+    if(_constrainted_pose.read(constrainted_target_) == RTT::NewData)
+    {
+        planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;        
+        plan(constrainted_target_);
     }
 }
 

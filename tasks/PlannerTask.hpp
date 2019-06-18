@@ -6,7 +6,6 @@
 #include "motion_planners/PlannerTaskBase.hpp"
 
 #include "motion_planners/MotionPlanners.hpp"
-#include "motion_planners/Config.hpp"
 
 #include <base/samples/RigidBodyState.hpp>
 
@@ -130,6 +129,7 @@ namespace motion_planners{
             base::samples::RigidBodyState target_pose_;
             base::commands::Joints target_joints_angle_;
 			std::string target_group_state_;
+            motion_planners::ConstraintPlanning constrainted_target_;
             bool initialised_planning_scene_;
             void updatePlanningscene();
             void writeCollisionObjectNames();

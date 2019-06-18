@@ -7,6 +7,7 @@ using_library "planning_environment"
 using_library "octomap"
 
 import_types_from "motion_planners/Config.hpp"
+import_types_from "motion_planners/planner_factory/abstract/AbstractPlannerConfig.hpp"
 import_types_from "planning_environment/Config.hpp"
 
 
@@ -47,8 +48,12 @@ task_context "PlannerTask" do
         doc("Target joints for the planning group stored in srdf under a tag")    
 
     # Currently only optimization based planner can make use of this predicted trajectory.
+    # The first and last value of the predicted trajectory should be the initial and target joint value.
     input_port("predicted_trajectory", "/base/JointsTrajectory").
         doc("Predicted trajectory for the given problem.")
+
+    input_port("constrainted_pose", "/motion_planners/ConstraintPlanning").
+        doc("Constrained target pose")
 
     input_port("known_object", "/motion_planners/ModelObject").
         doc("Add/Remove known model object in the environment. This object is considered to an external object")
