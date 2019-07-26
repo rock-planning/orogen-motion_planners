@@ -128,6 +128,7 @@ namespace motion_planners{
 
             base::samples::RigidBodyState target_pose_;
             base::commands::Joints target_joints_angle_;
+            base::samples::RigidBodyState debug_check_pose_;
 			std::string target_group_state_;
             motion_planners::ConstraintPlanning constrainted_target_;
             bool initialised_planning_scene_;
