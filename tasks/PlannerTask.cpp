@@ -90,6 +90,16 @@ void PlannerTask::updateHook()
         plan(target_group_state_);
     }
 
+    // get joint angles for start pose
+    if (_debug_check_pose.read(debug_check_pose_) == RTT::NewData)
+    {
+        if (planner_->assignPlanningRequest(joints_status_, debug_check_pose_, planner_status_)) {
+            planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+            _debug_check_pose_solution.write(planner_->getGoalJointAngles());
+        }
+        setPlannerStatus(planner_status_);
+    }
+
     // plan using the predicted trajectory
     if(_predicted_trajectory.read(predicted_trajectory_) == RTT::NewData)
     {

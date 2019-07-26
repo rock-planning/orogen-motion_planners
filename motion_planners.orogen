@@ -47,6 +47,9 @@ task_context "PlannerTask" do
     input_port("target_group_state", "/std/string").
         doc("Target joints for the planning group stored in srdf under a tag")    
 
+    input_port("debug_check_pose", "/base/samples/RigidBodyState").
+        doc("Pose which are checked for collisions and the joint angle are determined with the IK without planning.")
+
     # Currently only optimization based planner can make use of this predicted trajectory.
     # The first and last value of the predicted trajectory should be the initial and target joint value.
     input_port("predicted_trajectory", "/base/JointsTrajectory").
@@ -78,6 +81,9 @@ task_context "PlannerTask" do
 
     output_port("debug_target_pose", "/base/samples/RigidBodyState").
         doc("Target pose")
+
+    output_port("debug_check_pose_solution", "/base/commands/Joints").
+        doc("The joint angle for the passed pose.")
 
 
     port_driven
