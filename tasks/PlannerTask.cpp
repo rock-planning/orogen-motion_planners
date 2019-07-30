@@ -155,7 +155,7 @@ void PlannerTask::replan(base::JointsTrajectory &input_trajectory)
 
 void PlannerTask::writeCollisionObjectNames()
 {
-    collision_information_.collision_pair_names = planner_->getCollisionObjectNames();
+    collision_information_ = planner_->getCollisionObjectNames();
     _collision_information.write(collision_information_);	        
 }
 
