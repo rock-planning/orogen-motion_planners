@@ -59,7 +59,7 @@ task_context "PlannerTask" do
         doc("Constrained target pose")
 
     input_port("known_object", "/motion_planners/ModelObject").
-        doc("Add/Remove known model object in the environment. This object is considered to an external object")
+        doc("Add/Remove known model object in the environment. This object is considered as an external object")
 
     input_port("grasp_object", "/motion_planners/ModelObject").
         doc("Add/Remove an object at any link of the robot. This object is considered as a robot's link")
