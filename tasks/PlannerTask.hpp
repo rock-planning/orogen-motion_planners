@@ -35,7 +35,7 @@ namespace motion_planners{
 
             base::samples::Joints joints_status_;
 
-            std::shared_ptr<motion_planners::MotionPlanners> planner_;
+            std::unique_ptr<motion_planners::MotionPlanners> planner_;
 
             base::JointsTrajectory solution_, predicted_trajectory_;
             double solving_time_;
