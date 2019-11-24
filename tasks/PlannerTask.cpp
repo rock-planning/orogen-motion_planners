@@ -155,7 +155,7 @@ void PlannerTask::replan(base::JointsTrajectory &input_trajectory)
 
 void PlannerTask::writeCollisionObjectNames()
 {
-    collision_information_ = planner_->getCollisionObjectNames();
+    collision_information_ = planner_->getCollidedObjectsNames();
     _collision_information.write(collision_information_);	        
 }
 
@@ -165,8 +165,12 @@ void PlannerTask::solve()
 
     solving_time_ = 0.0;
     if(planner_->solve(solution_, planner_status_, solving_time_))
-        _planned_trajectory.write(solution_);    
+        _planned_trajectory.write(solution_);
 
+    _debug_num_of_iterations.write(planner_->planner_->getNumOfIterationsUsed());
+    
+    _debug_initial_trajectory.write(planner_->planner_->getInitialTrajectory());
+    
     _solving_time.write(solving_time_);    
 }
 

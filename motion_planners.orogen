@@ -85,6 +85,11 @@ task_context "PlannerTask" do
     output_port("debug_check_pose_solution", "/base/commands/Joints").
         doc("The joint angle for the passed pose.")
 
+    output_port("debug_num_of_iterations", "/std/size_t").
+        doc("Number of iteration used to solve the planning problem. Only optimization based planner will output this debug message.")
+
+    output_port("debug_initial_trajectory", "/base/JointsTrajectory").
+        doc("Output the initial trajectory used for solving the planning problem. Only optimization based planner will output this debug message.")
 
     port_driven
 
