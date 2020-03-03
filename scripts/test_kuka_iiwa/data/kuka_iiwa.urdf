@@ -4,6 +4,11 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="kuka_lbr_iiwa_14_r820" xmlns:xacro="http://wiki.ros.org/xacro">
+    <material name="Blue">
+        <color rgba="0.0 0.6 0.6 1.0"/>
+    </material>
+
+
   <!-- link list -->
   <link name="base_link">
     <visual>
@@ -57,6 +62,7 @@
       <geometry>
         <mesh filename="meshes/lbr_iiwa_14_r820/collision/link_1.stl"/>
       </geometry>
+      <material name="Blue"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -71,6 +77,7 @@
       <geometry>
         <mesh filename="meshes/lbr_iiwa_14_r820/collision/link_2.stl"/>
       </geometry>
+      <material name="Blue"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>

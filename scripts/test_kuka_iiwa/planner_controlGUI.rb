@@ -91,6 +91,11 @@ class KukaPlannerGui
             @kuka_planner.port('state').connect_to do |data|
                 updateStatusENUM()
             end
+            
+            @kuka_planner.port('solving_time').connect_to do |data|
+            @widget.pTextEdit_status.appendPlainText('Solved at : '+data.to_s+' secs');
+        end
+
 
         end
 
