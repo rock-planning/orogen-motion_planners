@@ -148,7 +148,7 @@ class KukaPlannerGui
             updateStatus ("PATH FOUND")
         when :NO_PATH_FOUND
             updateStatus ("NO PATH FOUND")
-		when :NO_IK
+		when :NO_IK_SOLUTION
             updateStatus ("No Inverse solution")	
         when :START_STATE_IN_COLLISION
             updateStatus ("START STATE IN COLLISION")
