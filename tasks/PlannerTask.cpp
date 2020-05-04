@@ -55,6 +55,10 @@ void PlannerTask::updateHook()
         return ;
     }
 
+
+    if(state() == NO_JOINT_STATUS)
+        state(RUNNING);
+
     // adding or removing an object in the world.
     if(_known_object.readNewest(known_object_) == RTT::NewData)
     {
