@@ -1,7 +1,7 @@
 require 'orocos'
 require 'vizkit'
 include Orocos
-require 'pry'
+#require 'pry'
 
 Orocos.initialize
 #Orocos::CORBA.name_service.ip = "127.0.0.1"
