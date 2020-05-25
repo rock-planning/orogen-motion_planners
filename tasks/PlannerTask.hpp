@@ -132,6 +132,7 @@ namespace motion_planners{
 			std::string target_group_state_;
             motion_planners::ConstraintPlanning constrainted_target_;
             bool initialised_planning_scene_;
+            bool initialised_;
             void updatePlanningscene();
             void writeCollisionObjectNames();
             void solve();

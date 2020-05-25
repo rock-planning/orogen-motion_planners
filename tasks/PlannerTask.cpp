@@ -29,11 +29,12 @@ bool PlannerTask::configureHook()
     planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
     {
-		
+        initialised_ = false;
         setPlannerStatus(planner_status_);
-        return false;
+        return true;
     }
-	
+
+    initialised_ = true;
     return true;
 }
 bool PlannerTask::startHook()
@@ -48,13 +49,18 @@ void PlannerTask::updateHook()
 {
     PlannerTaskBase::updateHook();
 
+    if(!initialised_)
+    {
+        setPlannerStatus(planner_status_);
+        return;
+    }
+
     // read the current joint angles        
     if(_joints_status.readNewest(joints_status_) == RTT::NoData)
     {
         state(NO_JOINT_STATUS);
         return ;
     }
-
 
     if(state() == NO_JOINT_STATUS)
         state(RUNNING);
@@ -216,7 +222,7 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
             state(PLANNER_INITIALISATION_FAILED); break;
         case motion_planners::PlannerStatus::CRASH:
             state(CRASH); break;
-        case motion_planners::PlannerStatus::INVALID:
+        case motion_planners::PlannerStatus::KINEMATIC_ERROR:
         {
             switch(planner_status.kinematic_status.statuscode)
             {
@@ -238,6 +244,10 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
                     state(IK_TIMEOUT); break;        
                 case kinematics_library::KinematicsStatus::IK_JOINTLIMITS_VIOLATED:
                     state(IK_JOINTLIMITS_VIOLATED); break;
+                case kinematics_library::KinematicsStatus::NO_CONFIG_FILE:
+                    state(NO_KINEMATIC_CONFIG_FILE); break;
+                case kinematics_library::KinematicsStatus::CONFIG_READ_ERROR:
+                    state(KINEMATIC_CONFIG_READ_ERROR); break;
                 case kinematics_library::KinematicsStatus::INVALID_STATE:
                     state(INVALID_KINEMATIC_STATE); break;				    
                 default:
@@ -250,11 +260,12 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
             }
             break;
         }
+        case motion_planners::PlannerStatus::INVALID:
+            state(UNKNOWN_STATE); break;
         default:
         {
-            std::cout<<"unknown planner state"<<planner_status.statuscode<<"   "<<motion_planners::PlannerStatus::INVALID<<std::endl;
-            state(UNKNOWN_STATE);
-            throw new std::runtime_error("This Planner status is unknown");
+            LOG_ERROR("[PlannerTask]: Planner is in an unknown state. The current state value is %d", planner_status.statuscode);
+            state(UNKNOWN_STATE);            
             break;
         }
     }
