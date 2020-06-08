@@ -28,13 +28,11 @@ bool PlannerTask::configureHook()
 
     planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
-    {
-        initialised_ = false;
+    {        
         setPlannerStatus(planner_status_);
-        return true;
+        return false;
     }
-
-    initialised_ = true;
+    
     return true;
 }
 bool PlannerTask::startHook()
@@ -48,12 +46,6 @@ bool PlannerTask::startHook()
 void PlannerTask::updateHook()
 {
     PlannerTaskBase::updateHook();
-
-    if(!initialised_)
-    {
-        setPlannerStatus(planner_status_);
-        return;
-    }
 
     // read the current joint angles        
     if(_joints_status.readNewest(joints_status_) == RTT::NoData)
