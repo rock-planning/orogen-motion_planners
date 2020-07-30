@@ -154,6 +154,10 @@ class KukaPlannerGui
             updateStatus ("START STATE IN COLLISION")
         when :GOAL_STATE_IN_COLLISION
             updateStatus ("GOAL STATE IN COLLISION")
+        when :START_JOINTANGLES_NOT_AVAILABLE
+            updateStatus ("START_JOINTANGLES_NOT_AVAILABLE")
+        when :GOAL_JOINTANGLES_NOT_AVAILABLE
+            updateStatus ("GOAL_JOINTANGLES_NOT_AVAILABLE")
         when :PLANNER_TIMEOUT
             updateStatus ("PLANNER TIMEOUT")            
         when :PLANNING
