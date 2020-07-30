@@ -4,14 +4,12 @@
 #define MOTION_PLANNERS_PLANNERTASK_TASK_HPP
 
 #include "motion_planners/PlannerTaskBase.hpp"
-
 #include "motion_planners/MotionPlanners.hpp"
-
 #include <base/samples/RigidBodyState.hpp>
-
 #include <planning_environment/OctomapConverter.hpp>
 
-namespace motion_planners{
+namespace motion_planners
+{
 
     /*! \class PlannerTask
      * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
@@ -131,7 +129,7 @@ namespace motion_planners{
             base::samples::RigidBodyState debug_check_pose_;
 			std::string target_group_state_;
             motion_planners::ConstraintPlanning constrainted_target_;
-            bool initialised_planning_scene_;
+            bool initialised_planning_scene_;            
             void updatePlanningscene();
             void writeCollisionObjectNames();
             void solve();

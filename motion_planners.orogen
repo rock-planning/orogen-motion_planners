@@ -25,8 +25,10 @@ task_context "PlannerTask" do
                     'CONSTRAINED_POSE_NOT_WITHIN_BOUNDS', 
                     'KDL_TREE_FAILED', 'KDL_CHAIN_FAILED', 'URDF_FAILED', 'NO_KINEMATIC_SOLVER_FOUND', 'IK_FOUND',
                     'NO_IK_SOLUTION', 'NO_FK_SOLUTION', 'IK_TIMEOUT', 'IK_JOINTLIMITS_VIOLATED', 'INVALID_KINEMATIC_STATE',
+                    'NO_KINEMATIC_CONFIG_FILE', 'KINEMATIC_CONFIG_READ_ERROR',
                     'PLANNING_REQUEST_SUCCESS', 'ROBOTMODEL_INITIALISATION_FAILED',
                     'PLANNER_INITIALISATION_FAILED', 'MODEL_OBJECT_ERROR', 'UNKNOWN_STATE'
+
 
     # Planner Config
     property("config", "/motion_planners/Config")

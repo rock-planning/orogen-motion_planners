@@ -4,7 +4,7 @@ require 'vizkit'
 require 'orocos'
 require 'rock/bundle'
 #require 'optparse'
-require 'pry'
+#require 'pry'
 
 =begin
 hostname = "localhost"

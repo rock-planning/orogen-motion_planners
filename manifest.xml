@@ -6,7 +6,6 @@
     <url>https://git.hb.dfki.de/dfki-planning/orogen-motion_planners.git</url>
     <logo>http://</logo>
     <depend package="base/cmake" />
-    <depend package="planning/collision_detection" />
     <depend package="planning/motion_planners" />
     <depend package="planning/planning_environment" />
     <tags>needs_opt</tags>

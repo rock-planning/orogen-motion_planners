@@ -28,12 +28,11 @@ bool PlannerTask::configureHook()
 
     planner_.reset(new motion_planners::MotionPlanners(config_));
     if(!planner_->initialize(planner_status_))
-    {
-		
+    {        
         setPlannerStatus(planner_status_);
         return false;
     }
-	
+    
     return true;
 }
 bool PlannerTask::startHook()
@@ -54,6 +53,9 @@ void PlannerTask::updateHook()
         state(NO_JOINT_STATUS);
         return ;
     }
+
+    if(state() == NO_JOINT_STATUS)
+        state(RUNNING);
 
     // adding or removing an object in the world.
     if(_known_object.readNewest(known_object_) == RTT::NewData)
@@ -93,8 +95,11 @@ void PlannerTask::updateHook()
     // get joint angles for start pose
     if (_debug_check_pose.read(debug_check_pose_) == RTT::NewData)
     {
+        updatePlanningscene();
+        state(GOAL_RECEIVED);
+
         if (planner_->assignPlanningRequest(joints_status_, debug_check_pose_, planner_status_)) {
-            planner_status_.statuscode = motion_planners::PlannerStatus::INVALID;
+            planner_status_.statuscode = motion_planners::PlannerStatus::KINEMATIC_ERROR;
             _debug_check_pose_solution.write(planner_->getGoalJointAngles());
         }
         setPlannerStatus(planner_status_);
@@ -212,7 +217,7 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
             state(PLANNER_INITIALISATION_FAILED); break;
         case motion_planners::PlannerStatus::CRASH:
             state(CRASH); break;
-        case motion_planners::PlannerStatus::INVALID:
+        case motion_planners::PlannerStatus::KINEMATIC_ERROR:
         {
             switch(planner_status.kinematic_status.statuscode)
             {
@@ -234,6 +239,10 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
                     state(IK_TIMEOUT); break;        
                 case kinematics_library::KinematicsStatus::IK_JOINTLIMITS_VIOLATED:
                     state(IK_JOINTLIMITS_VIOLATED); break;
+                case kinematics_library::KinematicsStatus::NO_CONFIG_FILE:
+                    state(NO_KINEMATIC_CONFIG_FILE); break;
+                case kinematics_library::KinematicsStatus::CONFIG_READ_ERROR:
+                    state(KINEMATIC_CONFIG_READ_ERROR); break;
                 case kinematics_library::KinematicsStatus::INVALID_STATE:
                     state(INVALID_KINEMATIC_STATE); break;				    
                 default:
@@ -246,11 +255,12 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
             }
             break;
         }
+        case motion_planners::PlannerStatus::INVALID:
+            state(UNKNOWN_STATE); break;
         default:
         {
-            std::cout<<"unknown planner state"<<planner_status.statuscode<<"   "<<motion_planners::PlannerStatus::INVALID<<std::endl;
-            state(UNKNOWN_STATE);
-            throw new std::runtime_error("This Planner status is unknown");
+            LOG_ERROR("[PlannerTask]: Planner is in an unknown state. The current state value is %d", planner_status.statuscode);
+            state(UNKNOWN_STATE);            
             break;
         }
     }
