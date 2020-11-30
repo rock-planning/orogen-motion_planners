@@ -24,7 +24,7 @@ bool DualArmPlannerTask::configureHook()
     if (! DualArmPlannerTaskBase::configureHook())
         return false;
     
-    klc_config_ = _klc_config.value();
+    klc_config_ = _klc_config.value();    
 
     dual_arm_planner_.reset(new motion_planners::DualArmMotionPlanners(config_, klc_config_));
     if(!dual_arm_planner_->initializeDualArmConfig(planner_status_))
@@ -90,12 +90,15 @@ void DualArmPlannerTask::updateHook()
 
 void DualArmPlannerTask::updatePlanningscene()
 {
-    if(!initialised_planning_scene_)
+    if(convertEnvDataToOctomap())
     {
-        dual_arm_planner_->assignOctomapPlanningScene(input_octree_);
-    }
+        if(!initialised_planning_scene_)
+        {
+            dual_arm_planner_->assignOctomapPlanningScene(input_octree_);
+        }
 
-    dual_arm_planner_->updateOctomap(input_octree_);
+        dual_arm_planner_->updateOctomap(input_octree_);
+    }
 }
 
 void DualArmPlannerTask::errorHook()

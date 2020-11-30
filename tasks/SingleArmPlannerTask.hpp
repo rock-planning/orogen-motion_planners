@@ -29,10 +29,7 @@ namespace motion_planners{
     protected:
         std::unique_ptr<motion_planners::MotionPlanners> planner_;
         base::JointsTrajectory solution_, predicted_trajectory_;
-        double solving_time_;
-        motion_planners::PlannerStatus planner_status_;
-        motion_planners::Config config_;
-        motion_planners::CollisionInformation collision_information_;
+
         
     public:
         /** TaskContext constructor for SingleArmPlannerTask

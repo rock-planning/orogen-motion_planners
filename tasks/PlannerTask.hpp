@@ -34,13 +34,16 @@ namespace motion_planners
         friend class PlannerTaskBase;
         protected:
             void setPlannerStatus(motion_planners::PlannerStatus &planner_status);
-            void convertEnvDataToOctomap();
+            bool convertEnvDataToOctomap();
 
             motion_planners::Config config_;
             base::samples::Joints joints_status_;
             motion_planners::ModelObject known_object_, grasp_object_;
             planning_environment::OctomapContainer input_octomap_;
             std::shared_ptr<octomap::OcTree> input_octree_;
+            double solving_time_;
+            motion_planners::PlannerStatus planner_status_;
+            motion_planners::CollisionInformation collision_information_;
             bool initialised_planning_scene_;
         public:
             /** TaskContext constructor for PlannerTask

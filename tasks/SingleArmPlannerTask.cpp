@@ -113,12 +113,15 @@ void SingleArmPlannerTask::updateHook()
 
 void SingleArmPlannerTask::updatePlanningscene()
 {
-    if(!initialised_planning_scene_)
+    if(convertEnvDataToOctomap())
     {
-        planner_->assignOctomapPlanningScene(input_octree_);
-    }
+        if(!initialised_planning_scene_)
+        {
+            planner_->assignOctomapPlanningScene(input_octree_);
+        }
 
-    planner_->updateOctomap(input_octree_);
+        planner_->updateOctomap(input_octree_);
+    }
 }
 
 // void SingleArmPlannerTask::writeCollisionObjectNames()

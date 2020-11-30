@@ -22,8 +22,7 @@ bool PlannerTask::configureHook()
         return false;
 
     // get the configuration values
-    config_ = _config.value();
-    
+    config_ = _config.value(); 
     return true;
 }
 
@@ -49,7 +48,7 @@ void PlannerTask::updateHook()
         state(RUNNING);
 }
 
-void PlannerTask::convertEnvDataToOctomap()
+bool PlannerTask::convertEnvDataToOctomap()
 {
     // read octmap data and convert to octree
     if(_octomap_in.readNewest(input_octomap_) == RTT::NewData)
@@ -61,9 +60,11 @@ void PlannerTask::convertEnvDataToOctomap()
             if(!initialised_planning_scene_)
             {         
                 initialised_planning_scene_ = true;
-            }            
+            }
+            return true;        
         }
     }
+    return false;
 }
 
 

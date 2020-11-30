@@ -26,14 +26,10 @@ namespace motion_planners{
     {
 	    friend class DualArmPlannerTaskBase;
         protected:
-            std::unique_ptr<motion_planners::DualArmMotionPlanners> dual_arm_planner_;
-            motion_planners::Config config_;
+            std::unique_ptr<motion_planners::DualArmMotionPlanners> dual_arm_planner_;            
             motion_planners::KLCConfig klc_config_;
-            motion_planners::PlannerStatus planner_status_;
             base::commands::Joints target_joints_angle_;
             base::JointsTrajectory dual_arm_solution_;
-            double solving_time_;
-
         public:
         /** TaskContext constructor for DualArmPlannerTask
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
