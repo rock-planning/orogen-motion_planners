@@ -9,7 +9,7 @@ robot_viz = Vizkit.default_loader.RobotVisualization
 robot_viz.modelFile = './data/kuka_iiwa.urdf'
 
  
-Orocos.run  'motion_planners::PlannerTask'=>'manipulatorplanner',
+Orocos.run  'motion_planners::SingleArmPlannerTask'=>'manipulatorplanner',
             'joint_control::FakeJointDriverTask' => 'plant', :output => nil do
 
 

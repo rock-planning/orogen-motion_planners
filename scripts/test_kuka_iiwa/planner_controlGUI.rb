@@ -99,8 +99,8 @@ class KukaPlannerGui
 
         end
 
-        @joints_command = Types::Base::Commands::Joints.new
-        @pose_command = Types::Base::Samples::RigidBodyState.new      
+        @joints_command = Types.base.commands.Joints.new
+        @pose_command = Types.base.samples::RigidBodyState.new      
 
         planner_tasks
     end
@@ -199,35 +199,35 @@ class KukaPlannerGui
                                 "joint_a5",
                                 "joint_a6",
                                 "joint_a7"]
-        joint_state1 = Types::Base::JointState.new
+        joint_state1 = Types.base.JointState.new
         joint_state1.position = @widget.dSB_jt_1.value()* Math::PI / 180.0
         joint_state1.speed = 1.0 #motor RPM
 
-        joint_state2 = Types::Base::JointState.new
+        joint_state2 = Types.base.JointState.new
         joint_state2.position = @widget.dSB_jt_2.value()* Math::PI / 180.0
         joint_state2.speed = 1.0 #motor RPM
 
 
-        joint_state3 = Types::Base::JointState.new
+        joint_state3 = Types.base.JointState.new
         joint_state3.position = @widget.dSB_jt_3.value()* Math::PI / 180.0
         joint_state3.speed = 1.0 #motor RPM
 
 
-        joint_state4 = Types::Base::JointState.new
+        joint_state4 = Types.base.JointState.new
         joint_state4.position = @widget.dSB_jt_4.value()* Math::PI / 180.0
         joint_state4.speed = 1.0 #motor RPM
 
 
-        joint_state5 = Types::Base::JointState.new
+        joint_state5 = Types.base.JointState.new
         joint_state5.position = @widget.dSB_jt_5.value()* Math::PI / 180.0
         joint_state5.speed = 1.0 #motor RPM
 
 
-        joint_state6 = Types::Base::JointState.new
+        joint_state6 = Types.base.JointState.new
         joint_state6.position = @widget.dSB_jt_6.value()* Math::PI / 180.0
         joint_state6.speed = 1.0 #motor RPM
 
-        joint_state7 = Types::Base::JointState.new
+        joint_state7 = Types.base.JointState.new
         joint_state7.position = @widget.dSB_jt_7.value()* Math::PI / 180.0
         joint_state7.speed = 1.0 #motor RPM
 

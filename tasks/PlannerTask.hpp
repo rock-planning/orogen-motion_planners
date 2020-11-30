@@ -4,9 +4,13 @@
 #define MOTION_PLANNERS_PLANNERTASK_TASK_HPP
 
 #include "motion_planners/PlannerTaskBase.hpp"
-#include "motion_planners/MotionPlanners.hpp"
+
 #include <base/samples/RigidBodyState.hpp>
 #include <planning_environment/OctomapConverter.hpp>
+#include <motion_planners/planner_factory/abstract/AbstractPlannerConfig.hpp>
+#include <base-logging/Logging.hpp>
+
+#include <motion_planners/MotionPlanners.hpp>
 
 namespace motion_planners
 {
@@ -30,22 +34,14 @@ namespace motion_planners
         friend class PlannerTaskBase;
         protected:
             void setPlannerStatus(motion_planners::PlannerStatus &planner_status);
+            void convertEnvDataToOctomap();
 
-            base::samples::Joints joints_status_;
-
-            std::unique_ptr<motion_planners::MotionPlanners> planner_;
-
-            base::JointsTrajectory solution_, predicted_trajectory_;
-            double solving_time_;
-
-            motion_planners::PlannerStatus planner_status_;
             motion_planners::Config config_;
-            motion_planners::CollisionInformation collision_information_;
+            base::samples::Joints joints_status_;
             motion_planners::ModelObject known_object_, grasp_object_;
-
             planning_environment::OctomapContainer input_octomap_;
             std::shared_ptr<octomap::OcTree> input_octree_;
-
+            bool initialised_planning_scene_;
         public:
             /** TaskContext constructor for PlannerTask
              * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
@@ -121,20 +117,6 @@ namespace motion_planners
              * before calling start() again.
              */
             void cleanupHook();
-
-        private:
-
-            base::samples::RigidBodyState target_pose_;
-            base::commands::Joints target_joints_angle_;
-            base::samples::RigidBodyState debug_check_pose_;
-			std::string target_group_state_;
-            motion_planners::ConstraintPlanning constrainted_target_;
-            bool initialised_planning_scene_;            
-            void updatePlanningscene();
-            void writeCollisionObjectNames();
-            void solve();
-            void replan(base::JointsTrajectory &input_trajectory);
-            template<typename T> void plan(T input);
            
     };
 }

@@ -13,10 +13,11 @@ import_types_from "planning_environment/Config.hpp"
 
 import_types_from "base"
 
-task_context "PlannerTask" do 
+task_context "PlannerTask" do abstract
 
     # Configuration needed
     needs_configuration
+
     runtime_states  'GOAL_RECEIVED', 'PLANNING', 'MISSING_TRANSFORMATION', 'PATH_FOUND', 'NO_PATH_FOUND', 'TIMEOUT',
                     'START_STATE_IN_COLLISION', 'GOAL_STATE_IN_COLLISION',
                     'INVALID_START_STATE', 'INVALID_GOAL_STATE',  'UNRECOGNIZED_GOAL_TYPE',
@@ -29,7 +30,6 @@ task_context "PlannerTask" do
                     'PLANNING_REQUEST_SUCCESS', 'ROBOTMODEL_INITIALISATION_FAILED',
                     'PLANNER_INITIALISATION_FAILED', 'MODEL_OBJECT_ERROR', 'UNKNOWN_STATE'
 
-
     # Planner Config
     property("config", "/motion_planners/Config")
 
@@ -39,6 +39,37 @@ task_context "PlannerTask" do
 
     input_port("octomap_in", "/planning_environment/OctomapContainer").
         doc("Octomap data representing the environment in the body frame")
+                
+    input_port("known_object", "/motion_planners/ModelObject").
+        doc("Add/Remove known model object in the environment. This object is considered as an external object")
+
+    input_port("grasp_object", "/motion_planners/ModelObject").
+        doc("Add/Remove an object at any link of the robot. This object is considered as a robot's link")
+
+    # Output port.
+    output_port("solving_time", "/double").
+        doc("Time taken for solving the problem. This time represent how long it took for the
+            solver to solve the problem.")
+
+    output_port("environment_out", "/base/samples/Pointcloud").
+        doc("Poincloud data representing the environment")
+
+    output_port("collision_information", "/motion_planners/CollisionInformation").
+        doc("Collision objects names")      
+
+    output_port("debug_target_pose", "/base/samples/RigidBodyState").
+        doc("Target pose")
+
+    output_port("debug_check_pose_solution", "/base/commands/Joints").
+        doc("The joint angle for the passed pose.") 
+
+end
+
+
+task_context "SingleArmPlannerTask", subclasses: "PlannerTask" do
+
+    # Configuration needed
+    needs_configuration
 
     input_port("target_joints_angle", "/base/commands/Joints").
         doc("Target joints angles")
@@ -47,7 +78,8 @@ task_context "PlannerTask" do
         doc("Target pose")
         
     input_port("target_group_state", "/std/string").
-        doc("Target joints for the planning group stored in srdf under a tag")    
+        doc("Target joints for the planning group stored in srdf under a tag")  
+
 
     input_port("debug_check_pose", "/base/samples/RigidBodyState").
         doc("Pose which are checked for collisions and the joint angle are determined with the IK without planning.")
@@ -60,32 +92,8 @@ task_context "PlannerTask" do
     input_port("constrainted_pose", "/motion_planners/ConstraintPlanning").
         doc("Constrained target pose")
 
-    input_port("known_object", "/motion_planners/ModelObject").
-        doc("Add/Remove known model object in the environment. This object is considered as an external object")
-
-    input_port("grasp_object", "/motion_planners/ModelObject").
-        doc("Add/Remove an object at any link of the robot. This object is considered as a robot's link")
-
-
-    # Output port.
-    output_port("solving_time", "/double").
-        doc("Time taken for solving the problem. This time represent how long it took for the
-            solver to solve the problem.")
-
     output_port("planned_trajectory", "/base/JointsTrajectory").
         doc("The planned trajectory which should be followed")
-
-    output_port("environment_out", "/base/samples/Pointcloud").
-        doc("Poincloud data representing the environment")
-
-    output_port("collision_information", "/motion_planners/CollisionInformation").
-        doc("Collision objects names")      
-
-    output_port("debug_target_pose", "/base/samples/RigidBodyState").
-        doc("Target pose")
-
-    output_port("debug_check_pose_solution", "/base/commands/Joints").
-        doc("The joint angle for the passed pose.")
 
     output_port("debug_num_of_iterations", "/std/size_t").
         doc("Number of iteration used to solve the planning problem. Only optimization based planner will output this debug message.")
@@ -102,5 +110,23 @@ task_context "PlannerTask" do
 #        align_port "environment_in"
 #        max_latency 0.1
 #    end
+
+end
+
+task_context "DualArmPlannerTask", subclasses: "PlannerTask" do
+
+       # Configuration needed
+       needs_configuration
+
+       # KLC Planner Config
+       property("klc_config", "/motion_planners/KLCConfig")
+   
+       input_port("target_joints_angle", "/base/commands/Joints").
+       doc("Target joints angles")
+
+       output_port("dual_arm_trajectory", "/base/JointsTrajectory").
+       doc("The planned trajectory for the dual arm.")
+
+       port_driven
 
 end
