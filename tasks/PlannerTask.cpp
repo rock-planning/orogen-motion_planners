@@ -133,7 +133,9 @@ void PlannerTask::setPlannerStatus(motion_planners::PlannerStatus &planner_statu
                 case kinematics_library::KinematicsStatus::CONFIG_READ_ERROR:
                     state(KINEMATIC_CONFIG_READ_ERROR); break;
                 case kinematics_library::KinematicsStatus::INVALID_STATE:
-                    state(INVALID_KINEMATIC_STATE); break;				    
+                    state(INVALID_KINEMATIC_STATE); break;	
+                case kinematics_library::KinematicsStatus::APPROX_IK_SOLUTION:
+                    state(IK_FOUND); break;		    
                 default:
                 {
                     std::cout<<"unknown Kinematics state"<<planner_status.kinematic_status.statuscode<<std::endl;
