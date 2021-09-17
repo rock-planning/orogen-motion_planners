@@ -63,6 +63,8 @@ task_context "PlannerTask" do abstract
     output_port("debug_check_pose_solution", "/base/commands/Joints").
         doc("The joint angle for the passed pose.") 
 
+    port_driven
+
 end
 
 
