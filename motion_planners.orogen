@@ -54,8 +54,8 @@ task_context "PlannerTask" do abstract
     output_port("environment_out", "/base/samples/Pointcloud").
         doc("Poincloud data representing the environment")
 
-    output_port("collision_information", "/motion_planners/CollisionInformation").
-        doc("Collision objects names")      
+    output_port("collided_links", "/collision_detection/CollisionLinksName").
+        doc("Collision objects names")    
 
     output_port("debug_target_pose", "/base/samples/RigidBodyState").
         doc("Target pose")

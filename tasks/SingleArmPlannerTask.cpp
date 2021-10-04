@@ -159,7 +159,7 @@ void SingleArmPlannerTask::plan(T input)
     }
     setPlannerStatus(planner_status_);
     if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS) 
-        _collision_information.write(planner_->getCollidedObjectsNames());         
+        _collided_links.write(planner_->getCollidedObjectsNames());         
 }
 
 void SingleArmPlannerTask::replan(base::JointsTrajectory &input_trajectory)
@@ -174,7 +174,7 @@ void SingleArmPlannerTask::replan(base::JointsTrajectory &input_trajectory)
     setPlannerStatus(planner_status_);
 
     if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS)
-        _collision_information.write(planner_->getCollidedObjectsNames());
+        _collided_links.write(planner_->getCollidedObjectsNames());
 
 }
 

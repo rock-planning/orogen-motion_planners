@@ -43,7 +43,6 @@ namespace motion_planners
             std::shared_ptr<octomap::OcTree> input_octree_;
             double solving_time_;
             motion_planners::PlannerStatus planner_status_;
-            motion_planners::CollisionInformation collision_information_;
             bool initialised_planning_scene_;
         public:
             /** TaskContext constructor for PlannerTask

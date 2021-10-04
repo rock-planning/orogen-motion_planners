@@ -84,7 +84,7 @@ void DualArmPlannerTask::updateHook()
         }
         setPlannerStatus(planner_status_);
         if(planner_status_.statuscode != PlannerStatus::PLANNING_REQUEST_SUCCESS) 
-            _collision_information.write(dual_arm_planner_->getCollidedObjectsNames());
+            _collided_links.write(dual_arm_planner_->getCollidedObjectsNames());
     }
 }
 
