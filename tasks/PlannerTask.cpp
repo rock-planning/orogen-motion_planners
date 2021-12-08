@@ -169,3 +169,8 @@ void PlannerTask::cleanupHook()
 {
     PlannerTaskBase::cleanupHook();
 }
+
+void PlannerTask::resetState()
+{
+    state(RUNNING);
+}

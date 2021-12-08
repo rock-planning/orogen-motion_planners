@@ -45,6 +45,8 @@ namespace motion_planners
             motion_planners::PlannerStatus planner_status_;
             bool initialised_planning_scene_;
         public:
+
+            virtual void resetState();
             /** TaskContext constructor for PlannerTask
              * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
              * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
