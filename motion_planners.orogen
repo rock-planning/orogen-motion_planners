@@ -117,20 +117,3 @@ task_context "SingleArmPlannerTask", subclasses: "PlannerTask" do
 
 end
 
-task_context "DualArmPlannerTask", subclasses: "PlannerTask" do
-
-       # Configuration needed
-       needs_configuration
-
-       # KLC Planner Config
-       property("klc_config", "/motion_planners/KLCConfig")
-   
-       input_port("target_joints_angle", "/base/commands/Joints").
-       doc("Target joints angles")
-
-       output_port("dual_arm_trajectory", "/base/JointsTrajectory").
-       doc("The planned trajectory for the dual arm.")
-
-       port_driven
-
-end
